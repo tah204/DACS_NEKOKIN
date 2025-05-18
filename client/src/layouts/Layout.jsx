@@ -163,9 +163,16 @@ const Layout = () => {
                 { to: "/products", label: "Sản phẩm", isHashLink: false },
                 { to: "/services", label: "Dịch vụ", isHashLink: false },
                 { to: "/news", label: "Tin tức", isHashLink: false },
+                { to: "/active-bookings", label: "Dịch vụ đang đặt", isHashLink: false, userOnly: true }, // Thêm mục mới
               ].map((item, index) => (
                 <li key={index} className="nav-item">
-                  {item.isHashLink ? (
+                  {item.userOnly ? (
+                    user && user.role === 'user' && (
+                      <Link to={item.to} className="nav-link" onClick={scrollToTop}>
+                        {item.label}
+                      </Link>
+                    )
+                  ) : item.isHashLink ? (
                     <HashLink smooth to={item.to} className="nav-link" onClick={scrollToTop}>
                       {item.label}
                     </HashLink>

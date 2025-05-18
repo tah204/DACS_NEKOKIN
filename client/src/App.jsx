@@ -13,14 +13,16 @@ import Product from './pages/Products';
 import Services from './pages/Services';
 import News from './pages/News';
 import Consulting from './pages/Consulting';
-import NewsDetail from './pages/NewsDetail'; // Thêm import
-import ProductDetail from './pages/ProductDetail'; // Thêm import
-import ServiceDetail from './pages/ServiceDetail'; // Thêm import
+import NewsDetail from './pages/NewsDetail';
+import ProductDetail from './pages/ProductDetail';
+import ServiceDetail from './pages/ServiceDetail';
+import ActiveBookings from './pages/ActiveBookings'; 
+import BookingHistory from './pages/BookingHistory'; 
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (!token || user.role !== 'admin') {
+  if (!token || !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
   return children;
@@ -35,17 +37,33 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="products" element={<Product />} />
-          <Route path="products/:id" element={<ProductDetail />} /> {/* Thêm route cho chi tiết sản phẩm */}
+          <Route path="products/:id" element={<ProductDetail />} />
           <Route path="services" element={<Services />} />
-          <Route path="services/:id" element={<ServiceDetail />} /> {/* Thêm route cho chi tiết dịch vụ */}
+          <Route path="services/:id" element={<ServiceDetail />} />
           <Route path="news" element={<News />} />
-          <Route path="news/:id" element={<NewsDetail />} /> {/* Thêm route cho chi tiết tin tức */}
+          <Route path="news/:id" element={<NewsDetail />} />
           <Route path="consulting" element={<Consulting />} />
+          <Route
+            path="active-bookings"
+            element={
+              <ProtectedRoute allowedRoles={['user']}>
+                <ActiveBookings />
+              </ProtectedRoute>
+            }
+          /> {/* Route cho dịch vụ đang đặt, chỉ cho user */}
+          <Route
+            path="booking-history"
+            element={
+              <ProtectedRoute allowedRoles={['user']}>
+                <BookingHistory />
+              </ProtectedRoute>
+            }
+          /> {/* Route cho lịch sử, chỉ cho user */}
         </Route>
         <Route
           path="/admin/*"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['admin']}>
               <AdminLayout />
             </ProtectedRoute>
           }

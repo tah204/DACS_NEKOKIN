@@ -6,6 +6,7 @@ const productRoutes = require('./routes/products');
 const newsRoutes = require('./routes/news');
 const serviceRoutes = require('./routes/services');
 const authRoutes = require('./routes/auth');
+const bookingRoutes = require('./routes/booking'); // Thêm route booking
 const authMiddleware = require('./middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
@@ -44,6 +45,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/api/products', productRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/bookings', bookingRoutes); // Thêm route booking
 app.use('/auth', authRoutes);
 
 // Tạo router riêng cho admin
