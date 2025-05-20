@@ -1,133 +1,179 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import HeroAbout from '../components/HeroAbout';
+
+const careTopics = [
+  {
+    title: 'Đồng hành cùng bạn',
+    content: 'Dịch vụ chăm sóc thú cưng NekoKin hiểu rằng thú cưng của bạn không thể diễn đạt bất cứ điều gì về cuộc sống hay triệu chứng của chúng. Vì vậy, chúng tôi bắt đầu bằng việc xây dựng mối quan hệ chặt chẽ giữa bác sĩ thú y và những người chủ. Sự thấu hiểu giữa bác sĩ thú y và chủ là điều cần thiết để phát triển một kế hoạch điều trị phù hợp. Các bác sĩ thú y của NekoKin là những chuyên gia về sức khỏe động vật, nhưng bạn mới là người hiểu rõ nhất về các bé. Do đó, ưu tiên hàng đầu của NekoKin là lắng nghe những người chủ vật nuôi và hợp tác chặt chẽ để cùng nhau mang đến cho những người bạn đồng hành thân yêu của mình một cuộc sống hạnh phúc và khỏe mạnh hơn.'
+  },
+  {
+    title: 'Trung thực và minh bạch',
+    content: 'Là cha mẹ của các bé, bạn hoàn toàn có quyền được minh bạch về mọi thứ liên quan đến chăm sóc y tế cho thú cưng của mình. Đó là lý do tại sao NekoKin muốn bạn tham gia vào mọi quyết định liên quan đến việc điều trị cho thú cưng của bạn. Chúng tôi tin rằng sự hợp tác này sẽ mang lại kết quả tốt nhất cho sức khỏe và hạnh phúc của những người bạn đồng hành thân yêu.'
+  },
+  {
+    title: 'Mục tiêu',
+    content: 'Thú y không chỉ là công việc kinh doanh của NekoKin. Sức khỏe và phúc lợi động vật là sứ mệnh và niềm đam mê của chúng tôi. Thú cưng của bạn là ưu tiên hàng đầu tại đây. Chúng tôi cam kết cung cấp đội ngũ bác sĩ thú y có trình độ chuyên môn cao cùng với đội ngũ nhân viên hỗ trợ chuyên nghiệp, nhằm đảm bảo thú cưng của bạn có được sức khỏe tốt nhất.'
+  },
+  {
+    title: 'Cách tiếp cận phù hợp',
+    content: 'Giúp bạn hiểu và điều chỉnh hành vi thú cưng, từ huấn luyện vệ sinh, giảm stress đến điều trị các hành vi không mong muốn.'
+  }
+];
 
 const About = () => {
-  const handleLinkClick = () => {
-    window.scrollTo(0, 0);
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   return (
-    <section className="about-section py-5 bg-light">
-      <div className="container">
-        {/* Tiêu đề chính */}
-        <h2 className="text-center mb-5">Giới thiệu về NekoKin</h2>
+    <div>
+      <HeroAbout />
 
-        {/* Ảnh giới thiệu */}
-        <div className="row mb-5">
-          <div className="col-12 text-center">
-            <img
-              src="/images/about.jpg"
-              alt="Giới thiệu NekoKin"
-              className="img-fluid rounded shadow"
-              style={{ maxHeight: '400px', objectFit: 'cover' }}
-            />
-          </div>
-        </div>
-
-        {/* Nội dung giới thiệu */}
-        <div className="about-content">
-          {/* Chào mừng */}
-          <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Chào mừng bạn đến với NekoKin</h3>
-              <p className="text-muted">
-                NekoKin là một website dành riêng cho những người yêu thú cưng, đặc biệt là mèo và chó. Chúng tôi cung cấp các sản phẩm chất lượng cao như thức ăn dinh dưỡng, đồ chơi an toàn, và phụ kiện thời trang để đảm bảo thú cưng của bạn luôn khỏe mạnh, vui vẻ và tràn đầy năng lượng. Không chỉ dừng lại ở việc bán hàng, NekoKin còn là nơi chia sẻ kiến thức và kinh nghiệm chăm sóc thú cưng thông qua các bài viết chuyên sâu, giúp bạn trở thành một người chủ tận tâm và chu đáo.
-              </p>
+      {/* Nội dung giới thiệu */}
+      <section className="pt-3 pb-5" style={{ backgroundColor: '#fffaf4' }}>
+        <div className="container">
+          {/* Tiêu đề giữa 2 cột */}
+          <div className="row justify-content-center">
+            <div className="col-md-8">
+              <h2 className="fw-bold text-center mb-4" style={{ fontFamily: 'Quicksand, sans-serif', color: '#0d2554', fontSize: '2.5rem' }}>Về chúng tôi</h2>
             </div>
           </div>
 
-          {/* Lịch sử hình thành */}
+          {/* Nội dung chia đôi */}
           <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Lịch sử hình thành</h3>
-              <p className="text-muted">
-                NekoKin được thành lập vào năm 2020 bởi một nhóm những người yêu thú cưng, với mục tiêu xây dựng một cộng đồng đáng tin cậy cho những người nuôi mèo và chó tại Việt Nam. Từ những ngày đầu tiên chỉ là một cửa hàng nhỏ cung cấp thức ăn cho thú cưng, chúng tôi đã không ngừng mở rộng và phát triển để trở thành một trong những website hàng đầu về chăm sóc thú cưng. Đến nay, NekoKin đã phục vụ hơn 50.000 khách hàng trên toàn quốc, với hàng ngàn sản phẩm và bài viết hữu ích được cập nhật thường xuyên.
-              </p>
+            <div className="col-md-6">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <p className="text-muted" style={{ lineHeight: '1.9', fontSize: '1.2rem' }}>
+                  Thú cưng là một phần quan trọng như một thành viên gia đình của chúng ta. Vì vậy, khi thú cưng của chúng ta bị nhiễm bệnh, hiển nhiên chúng ta cũng muốn chúng được các chuyên gia tận tuỵ chăm sóc.
+                </p>
+                <p className="text-muted" style={{ lineHeight: '1.9', fontSize: '1.2rem' }}>
+                  Chúng tôi thành lập NekoKin để đáp ứng nhu cầu cung cấp các dịch vụ chăm sóc sức khỏe và thú y đẳng cấp thế giới ở Đông Nam Á.
+                </p>
+              </motion.div>
+            </div>
+            <div className="col-md-6">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <p className="text-muted" style={{ lineHeight: '1.9', fontSize: '1.2rem' }}>
+                  Khi nói đến sức khỏe của thú cưng, chúng tôi áp dụng các tiêu chuẩn cao nhất mà bạn có thể tìm thấy ở các bệnh viện thú y tốt nhất ở Bắc Mỹ, Châu Âu và Úc.
+                </p>
+                <p className="text-muted" style={{ lineHeight: '1.9', fontSize: '1.2rem' }}>
+                  Chúng tôi luôn coi trọng việc xây dựng mối quan hệ tin cậy và lâu dài với khách hàng. NekoKin tin rằng khách hàng sẽ hoàn toàn yên tâm khi giao thú cưng của mình cho chúng tôi.
+                </p>
+              </motion.div>
             </div>
           </div>
 
-          {/* Sứ mệnh */}
+          {/* Hình ảnh bên dưới nội dung */}
           <div className="row mb-5">
             <div className="col-12">
-              <h3 className="text-center mb-4">Sứ mệnh của chúng tôi</h3>
-              <p className="text-muted">
-                Chúng tôi mong muốn mang đến những thông tin hữu ích và sản phẩm tốt nhất để giúp bạn chăm sóc thú cưng một cách dễ dàng và hiệu quả. NekoKin không chỉ là nơi mua sắm, mà còn là người bạn đồng hành đáng tin cậy trên hành trình yêu thương và chăm sóc bạn bè bốn chân của bạn. Chúng tôi cam kết cung cấp các sản phẩm đã được kiểm định chất lượng, cùng với các bài viết chia sẻ kinh nghiệm được viết bởi đội ngũ chuyên gia, để đảm bảo thú cưng của bạn luôn được yêu thương và chăm sóc một cách khoa học nhất.
-              </p>
+              <motion.img
+                src="/images/about.jpg"
+                alt="Giới thiệu NekoKin"
+                className="img-fluid rounded shadow d-block mx-auto"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              />
             </div>
           </div>
 
-          {/* Đội ngũ */}
-          <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Đội ngũ của NekoKin</h3>
-              <p className="text-muted">
-                Đội ngũ của NekoKin bao gồm các chuyên gia về thú y, các nhà dinh dưỡng động vật, và những người yêu thú cưng giàu kinh nghiệm. Chúng tôi tự hào có đội ngũ tư vấn viên luôn sẵn sàng hỗ trợ bạn 24/7, giải đáp mọi thắc mắc từ cách chọn thức ăn phù hợp, cách huấn luyện thú cưng, đến cách xử lý các vấn đề sức khỏe thường gặp. Mỗi thành viên của NekoKin đều làm việc với niềm đam mê và trách nhiệm để mang lại trải nghiệm tốt nhất cho bạn và thú cưng của bạn.
-              </p>
+          {/* Sứ mệnh và Giá trị */}
+          <div className="row align-items-center mb-5">
+            <div className="col-md-6">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.9 }}
+              >
+                <h2 className="fw-bold mb-4 text-start" style={{ fontFamily: 'Quicksand, sans-serif', color: '#0d2554' }}>Sứ mệnh & Giá trị</h2>
+                <ul className="text-muted text-start" style={{ lineHeight: '1.9', fontSize: '1.5rem' }}>
+                  <li>Luôn đặt lợi ích của thú cưng lên hàng đầu.</li>
+                  <li>Cung cấp sản phẩm được chọn lọc kỹ lưỡng.</li>
+                  <li>Chia sẻ kiến thức chuyên sâu từ đội ngũ bác sĩ thú y.</li>
+                  <li>Phát triển cộng đồng yêu thú cưng văn minh.</li>
+                </ul>
+              </motion.div>
+            </div>
+
+            <div className="col-md-6">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.9 }}
+              >
+                <img
+                  src="/images/Cat Kitty GIF.gif" // 👉 bạn thay link ảnh ở đây
+                  alt="Sứ mệnh NekoKin"
+                  className="img-fluid rounded shadow"
+                />
+              </motion.div>
             </div>
           </div>
 
-          {/* Giá trị cốt lõi */}
-          <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Giá trị cốt lõi</h3>
-              <p className="text-muted mb-3">
-                Tại NekoKin, chúng tôi hoạt động dựa trên ba giá trị cốt lõi:
-              </p>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  <strong>Chất lượng:</strong> Mọi sản phẩm đều được chọn lọc kỹ càng, đảm bảo an toàn và phù hợp với nhu cầu của thú cưng.
-                </li>
-                <li className="list-group-item">
-                  <strong>Kiến thức:</strong> Cung cấp thông tin chính xác, khoa học thông qua các bài viết được viết bởi chuyên gia.
-                </li>
-                <li className="list-group-item">
-                  <strong>Tận tâm:</strong> Luôn đặt lợi ích của khách hàng và thú cưng lên hàng đầu, với dịch vụ hỗ trợ chu đáo và tận tình.
-                </li>
-              </ul>
+
+          {/* Chăm sóc sức khoẻ toàn diện */}
+          <div className="text-center text-md-start">
+            <h2 className="fw-bold mb-5 text-center" style={{ fontFamily: 'Quicksand, sans-serif', color: '#0d2554', fontSize: '2.75rem' }}>Chăm sóc sức khoẻ toàn diện</h2>
+            <div className="row">
+              <div className="col-md-4 mb-4 mb-md-0">
+                <ul className="list-unstyled ps-md-3">
+                  {careTopics.map((topic, index) => (
+                    <li
+                      key={index}
+                      className="py-2"
+                      style={{
+                        cursor: 'pointer',
+                        fontWeight: index === selectedIndex ? 'bold' : 'normal',
+                        color: index === selectedIndex ? '#8B0000' : '#333',
+                        textAlign: 'left',
+                        fontSize: '1.8rem',
+                        borderLeft: index === selectedIndex ? '4px solid #8B0000' : '4px solid transparent',
+                        paddingLeft: '12px'
+                      }}
+                      onClick={() => setSelectedIndex(index)}
+                    >
+                      {topic.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-md-8">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={selectedIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="border-0 p-4 bg-white"
+                  >
+                    <p className="text-muted" style={{ lineHeight: '1.8', fontSize: '1.25rem' }}>{careTopics[selectedIndex].content}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
-          {/* Tại sao chọn NekoKin */}
-          <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Tại sao chọn NekoKin?</h3>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">Sản phẩm đa dạng, chất lượng cao, an toàn cho thú cưng.</li>
-                <li className="list-group-item">Bài viết chia sẻ kinh nghiệm được viết bởi các chuyên gia.</li>
-                <li className="list-group-item">Hỗ trợ tư vấn chăm sóc thú cưng 24/7.</li>
-                <li className="list-group-item">Chính sách đổi trả minh bạch, giao hàng nhanh chóng trên toàn quốc.</li>
-                <li className="list-group-item">Cộng đồng yêu thú cưng lớn mạnh, nơi bạn có thể kết nối và chia sẻ kinh nghiệm với những người cùng sở thích.</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Kêu gọi hành động */}
-          <div className="row mb-5">
-            <div className="col-12">
-              <h3 className="text-center mb-4">Hãy cùng NekoKin chăm sóc thú cưng của bạn!</h3>
-              <p className="text-muted">
-                Nếu bạn đang tìm kiếm một nơi đáng tin cậy để mua sắm và tìm hiểu về chăm sóc thú cưng, NekoKin chính là lựa chọn hoàn hảo dành cho bạn. Hãy khám phá các sản phẩm và bài viết của chúng tôi ngay hôm nay, và cùng chúng tôi tạo nên một cuộc sống tốt đẹp hơn cho những người bạn bốn chân của bạn!
-              </p>
-            </div>
-          </div>
-
-          {/* Nút quay lại */}
-          <div className="text-center">
-            <Link
-              to="/home"
-              className="btn btn-primary btn-lg"
-              onClick={handleLinkClick}
-            >
+          <div className="text-center mt-5">
+            <Link to="/home" className="btn btn-lg" style={{ backgroundColor: '#8B0000', color: '#fff' }}>
               Quay lại trang chủ
             </Link>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 
