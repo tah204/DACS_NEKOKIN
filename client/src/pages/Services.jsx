@@ -8,7 +8,7 @@ const Services = () => {
   const [ageRangeFilter, setAgeRangeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const servicesPerPage = 16;
+  const servicesPerPage = 6; // Giảm số lượng dịch vụ mỗi trang để giống bố cục hình ảnh
 
   const removeAccents = (str) => {
     return str
@@ -66,19 +66,40 @@ const Services = () => {
   return (
     <section className="services-section py-5 bg-light">
       <div className="container">
-        {/* Tiêu đề */}
-        <h2 className="text-center mb-5">Dịch vụ</h2>
+        {/* Phần tiêu đề và mô tả */}
+        <div className="row align-items-center mb-5">
+          <div className="col-12 col-md-6">
+            <h2 className="text-center text-primary mb-4" style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>
+              Dịch vụ
+            </h2>
+            <img
+              src="/images/tamspa.jpg" // Thay bằng đường dẫn hình ảnh thực tế (ví dụ phẫu thuật)
+              alt="Dịch vụ chăm sóc thú cưng"
+              className="img-fluid rounded shadow"
+              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
+              onError={(e) => (e.target.src = '/images/default_service.jpg')}
+            />
+          </div>
+          <div className="col-12 col-md-6">
+            <p className="lead text-muted">
+              Dịch vụ bạn đang tìm kiếm nằm tại đây! Chúng tôi cung cấp các giải pháp chăm sóc chuyên nghiệp và tận tâm
+              cho thú cưng của bạn, từ phẫu thuật đến chăm sóc hàng ngày. Hãy khám phá và chọn dịch vụ phù hợp!
+            </p>
+            <button className="btn btn-primary mt-3">Xem thêm</button>
+          </div>
+        </div>
 
         {/* Bộ lọc */}
-        <div className="row mb-4">
-          <div className="col-12 col-md-4 mb-3">
+        <div className="row mb-5 g-3 justify-content-center">
+          <div className="col-12 col-md-3">
             <select
               value={petTypeFilter}
               onChange={(e) => {
                 setPetTypeFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="form-select"
+              className="form-select shadow-sm"
+              style={{ borderRadius: '20px', padding: '10px' }}
             >
               <option value="all">Tất cả thú cưng</option>
               <option value="dog">Chó</option>
@@ -86,14 +107,15 @@ const Services = () => {
               <option value="both">Chó và Mèo</option>
             </select>
           </div>
-          <div className="col-12 col-md-4 mb-3">
+          <div className="col-12 col-md-3">
             <select
               value={ageRangeFilter}
               onChange={(e) => {
                 setAgeRangeFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="form-select"
+              className="form-select shadow-sm"
+              style={{ borderRadius: '20px', padding: '10px' }}
             >
               <option value="all">Tất cả độ tuổi</option>
               <option value="under_2_months">Dưới 2 tháng</option>
@@ -101,10 +123,9 @@ const Services = () => {
               <option value="6_to_12_months">Từ 6-12 tháng</option>
               <option value="1_to_7_years">Từ 1-7 năm</option>
               <option value="over_7_years">Trên 7 năm</option>
-              <option value="all">Mọi độ tuổi</option>
             </select>
           </div>
-          <div className="col-12 col-md-4 mb-3">
+          <div className="col-12 col-md-3">
             <input
               type="text"
               placeholder="Tìm kiếm dịch vụ..."
@@ -113,18 +134,25 @@ const Services = () => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="form-control"
+              className="form-control shadow-sm"
+              style={{ borderRadius: '20px', padding: '10px' }}
             />
           </div>
         </div>
 
         {/* Danh sách dịch vụ */}
-        <div className="row g-4">
+        <div className="row g-4 mb-5">
+          <h3 className="text-center mb-4" style={{ fontSize: '2rem', color: '#1e3a8a' }}>
+            Các dịch vụ dành cho thú cưng
+          </h3>
           {currentServices.length > 0 ? (
             currentServices.map((service) => (
-              <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={service._id}>
-                <Link to={`/services/${service._id}`} className="text-decoration-none text-dark">
-                  <div className="card h-100 shadow-sm">
+              <div className="col-12 col-sm-6 col-md-4" key={service._id}>
+                <Link to={`/services/${service._id}`} className="text-decoration-none">
+                  <div
+                    className="card h-100 border-0 shadow-sm"
+                    style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: '#1e3a8a', color: '#fff' }}
+                  >
                     <img
                       src={`/images/${service.image}`}
                       alt={service.name}
@@ -132,8 +160,15 @@ const Services = () => {
                       onError={(e) => (e.target.src = '/images/default_service.jpg')}
                       style={{ objectFit: 'cover', height: '200px' }}
                     />
-                    <div className="card-body d-flex flex-column">
-                      <h3 className="card-title text-center">{service.name}</h3>
+                    <div className="card-body text-center p-3">
+                      <h5 className="card-title mb-2" style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+                        {service.name}
+                      </h5>
+                      <p className="card-text" style={{ fontSize: '0.9rem' }}>
+                        {service.description.length > 50
+                          ? `${service.description.substring(0, 50)}...`
+                          : service.description}
+                      </p>
                     </div>
                   </div>
                 </Link>
@@ -148,7 +183,7 @@ const Services = () => {
 
         {/* Phân trang */}
         {totalPages > 1 && (
-          <div className="row mt-4">
+          <div className="row mt-5">
             <div className="col-12 text-center">
               <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center">
@@ -156,6 +191,7 @@ const Services = () => {
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(currentPage - 1)}
+                      style={{ borderRadius: '20px', margin: '0 5px' }}
                     >
                       Trước
                     </button>
@@ -168,6 +204,12 @@ const Services = () => {
                       <button
                         className="page-link"
                         onClick={() => handlePageChange(number)}
+                        style={{
+                          borderRadius: '20px',
+                          margin: '0 5px',
+                          backgroundColor: currentPage === number ? '#007bff' : '',
+                          color: currentPage === number ? '#fff' : '',
+                        }}
                       >
                         {number}
                       </button>
@@ -177,6 +219,7 @@ const Services = () => {
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(currentPage + 1)}
+                      style={{ borderRadius: '20px', margin: '0 5px' }}
                     >
                       Sau
                     </button>
@@ -186,6 +229,52 @@ const Services = () => {
             </div>
           </div>
         )}
+
+        {/* Phần Triết lý của ADI */}
+        <div className="row align-items-center mb-5 py-5 bg-white shadow-sm">
+          <div className="col-12 col-md-6 order-md-2">
+            <img
+              src="/images/stress.jpg" // Thay bằng hình ảnh thú bông thực tế
+              alt="Triết lý ADI"
+              className="img-fluid rounded"
+              style={{ maxHeight: '300px', objectFit: 'contain' }}
+              onError={(e) => (e.target.src = '/images/default_service.jpg')}
+            />
+          </div>
+          <div className="col-12 col-md-6 order-md-1">
+            <h3 className="text-primary mb-3" style={{ fontSize: '2rem' }}>
+              Triết lý của ADI
+            </h3>
+            <p className="text-muted">
+              Chúng tôi tin rằng việc chăm sóc thú cưng không chỉ là trách nhiệm mà còn là niềm vui. Với đội ngũ chuyên
+              nghiệp và tận tâm, chúng tôi mang đến sự an toàn và yêu thương cho thú cưng của bạn. Hãy để chúng tôi đồng
+              hành cùng bạn!
+            </p>
+            <button className="btn btn-primary mt-3">Tìm hiểu thêm</button>
+          </div>
+        </div>
+
+        {/* Phần Compassionate care */}
+        <div className="row align-items-center mb-5 py-5 bg-light">
+          <div className="col-12 col-md-6">
+            <img
+              src="/images/petfun.jpg" // Thay bằng hình ảnh thú cưng thực tế
+              alt="Chăm sóc tận tâm"
+              className="img-fluid rounded shadow"
+              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
+              onError={(e) => (e.target.src = '/images/default_service.jpg')}
+            />
+          </div>
+          <div className="col-12 col-md-6 text-center">
+            <h3 className="text-primary mb-3" style={{ fontSize: '2.5rem' }}>
+              Compassionate care, right when matters
+            </h3>
+            <p className="text-muted mb-4">
+              Chúng tôi luôn ở đây khi bạn cần, mang đến sự chăm sóc tận tâm cho thú cưng của bạn.
+            </p>
+            <button className="btn btn-primary">Đặt lịch ngay</button>
+          </div>
+        </div>
       </div>
     </section>
   );
