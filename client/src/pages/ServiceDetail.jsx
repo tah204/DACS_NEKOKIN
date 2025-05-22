@@ -5,6 +5,7 @@ import axios from 'axios';
 const ServiceDetail = () => {
   const { id } = useParams();
   const [service, setService] = useState(null);
+  const [pets, setPets] = useState([]); // Lấy danh sách thú cưng
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [error, setError] = useState(null);
@@ -16,6 +17,10 @@ const ServiceDetail = () => {
     bookingDate: '',
     bookingTime: '',
     serviceId: id,
+    subServiceId: '', // Thêm trường để chọn subService
+    petId: '', // Thêm trường petId
+    checkIn: '', // Thêm trường checkIn cho hotel
+    checkOut: '', // Thêm trường checkOut cho hotel
   });
   const [loginForm, setLoginForm] = useState({
     username: '',
@@ -32,12 +37,34 @@ const ServiceDetail = () => {
       }
 
       try {
+        // Lấy thông tin dịch vụ
         const serviceResponse = await axios.get(`http://localhost:5000/api/services/${id}`);
         if (mounted && (!serviceResponse.data || !serviceResponse.data.name)) {
           setError('Dữ liệu dịch vụ không hợp lệ.');
         } else if (mounted) {
           setService(serviceResponse.data);
-          setBookingForm((prev) => ({ ...prev, serviceId: id }));
+          setBookingForm((prev) => ({
+            ...prev,
+            serviceId: id,
+            subServiceId: serviceResponse.data.subServices?.[0]?._id || '', // Mặc định chọn subService đầu tiên
+          }));
+        }
+
+        // Lấy danh sách thú cưng (nếu đã đăng nhập)
+        const token = localStorage.getItem('token');
+        if (token) {
+          const petResponse = await axios.get('http://localhost:5000/api/pets', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (mounted) {
+            setPets(petResponse.data);
+            if (petResponse.data.length > 0) {
+              setBookingForm((prev) => ({
+                ...prev,
+                petId: petResponse.data[0]._id, // Mặc định chọn thú cưng đầu tiên
+              }));
+            }
+          }
         }
       } catch (error) {
         if (mounted) {
@@ -51,7 +78,7 @@ const ServiceDetail = () => {
     return () => { mounted = false; };
   }, [id]);
 
-  const validateBookingTime = (date, time) => {
+  const validateBookingTime = (date, time, checkIn, checkOut) => {
     const currentDateTime = new Date();
     const currentDate = currentDateTime.toISOString().split('T')[0];
     const currentTime = currentDateTime.toTimeString().split(' ')[0].substring(0, 5);
@@ -74,6 +101,24 @@ const ServiceDetail = () => {
       return;
     }
 
+    if (service?.type === 'hotel') {
+      if (!checkIn || !checkOut) {
+        setBookingError('Vui lòng chọn ngày check-in và check-out.');
+        setIsValidBooking(false);
+        return;
+      }
+      if (new Date(checkOut) <= new Date(checkIn)) {
+        setBookingError('Ngày check-out phải sau ngày check-in.');
+        setIsValidBooking(false);
+        return;
+      }
+      if (new Date(checkIn) < new Date(currentDate)) {
+        setBookingError('Ngày check-in không thể là ngày đã qua.');
+        setIsValidBooking(false);
+        return;
+      }
+    }
+
     setBookingError('');
     setIsValidBooking(true);
   };
@@ -82,10 +127,12 @@ const ServiceDetail = () => {
     const { name, value } = e.target;
     setBookingForm((prev) => {
       const updatedForm = { ...prev, [name]: value };
-      if (name === 'bookingDate' || name === 'bookingTime') {
+      if (name === 'bookingDate' || name === 'bookingTime' || name === 'checkIn' || name === 'checkOut') {
         validateBookingTime(
           name === 'bookingDate' ? value : updatedForm.bookingDate,
-          name === 'bookingTime' ? value : updatedForm.bookingTime
+          name === 'bookingTime' ? value : updatedForm.bookingTime,
+          name === 'checkIn' ? value : updatedForm.checkIn,
+          name === 'checkOut' ? value : updatedForm.checkOut
         );
       }
       return updatedForm;
@@ -109,33 +156,67 @@ const ServiceDetail = () => {
 
     const bookingDateTime = new Date(`${bookingForm.bookingDate}T${bookingForm.bookingTime}:00+07:00`);
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/bookings',
-        { customerName: bookingForm.customerName, phone: bookingForm.phone, bookingDate: bookingDateTime.toISOString(), serviceId: bookingForm.serviceId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const bookingData = {
+        customerName: bookingForm.customerName,
+        phone: bookingForm.phone,
+        bookingDate: bookingDateTime.toISOString(),
+        serviceId: bookingForm.serviceId,
+        subServiceId: bookingForm.subServiceId,
+        petId: bookingForm.petId,
+        ...(service?.type === 'hotel' && {
+          checkIn: new Date(bookingForm.checkIn).toISOString(),
+          checkOut: new Date(bookingForm.checkOut).toISOString(),
+        }),
+      };
+
+      const response = await axios.post('http://localhost:5000/api/bookings', bookingData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setShowBookingModal(false);
-      setBookingForm({ customerName: '', phone: '', bookingDate: '', bookingTime: '', serviceId: id });
+      setBookingForm({
+        customerName: '',
+        phone: '',
+        bookingDate: '',
+        bookingTime: '',
+        serviceId: id,
+        subServiceId: '',
+        petId: '',
+        checkIn: '',
+        checkOut: '',
+      });
       setBookingError('');
       setIsValidBooking(false);
       alert('Đặt lịch thành công! Vui lòng kiểm tra tại "Dịch vụ đang đặt".');
     } catch (error) {
-      console.error('Error booking:', error.message);
-      setError('Đặt lịch thất bại.');
+      console.error('Error booking:', error.response ? error.response.data : error.message);
+      setBookingError(error.response?.data?.message || 'Đặt lịch thất bại.');
     }
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', loginForm);
+      const response = await axios.post('http://localhost:5000/auth/login', loginForm);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       setShowLoginModal(false);
       setShowBookingModal(true);
+
+      // Lấy danh sách thú cưng sau khi đăng nhập
+      const petResponse = await axios.get('http://localhost:5000/api/pets', {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      });
+      setPets(petResponse.data);
+      if (petResponse.data.length > 0) {
+        setBookingForm((prev) => ({
+          ...prev,
+          petId: petResponse.data[0]._id,
+        }));
+      }
     } catch (error) {
-      console.error('Error logging in:', error.message);
-      setError('Đăng nhập thất bại.');
+      console.error('Error logging in:', error.response ? error.response.data : error.message);
+      setError(error.response?.data?.message || 'Đăng nhập thất bại.');
     }
   };
 
@@ -148,7 +229,7 @@ const ServiceDetail = () => {
         <div className="row g-4">
           <div className="col-12 col-md-6 mb-4">
             <img
-              src={`/images/${service.image}`}
+              src={service.image ? `/images/${service.image}` : '/images/default_service.jpg'}
               alt={service.name}
               className="img-fluid rounded shadow"
               style={{ maxHeight: '400px', objectFit: 'cover', width: '100%' }}
@@ -159,24 +240,9 @@ const ServiceDetail = () => {
             <div className="card h-100 shadow-sm">
               <div className="card-body">
                 <h2 className="card-title mb-3">{service.name}</h2>
-                <p className="card-text fs-4 text-primary mb-2">{service.price.toLocaleString()} VNĐ</p>
                 <p className="card-text text-muted mb-2">
-                  <strong>Dành cho:</strong>{' '}
-                  {service.petType === 'cat' ? 'Mèo' : service.petType === 'dog' ? 'Chó' : 'Chó và Mèo'}
-                </p>
-                <p className="card-text text-muted mb-2">
-                  <strong>Độ tuổi:</strong>{' '}
-                  {service.ageRange === 'all'
-                    ? 'Tất cả độ tuổi'
-                    : service.ageRange === 'under_2_months'
-                    ? 'Dưới 2 tháng'
-                    : service.ageRange === '2_to_6_months'
-                    ? 'Từ 2-6 tháng'
-                    : service.ageRange === '6_to_12_months'
-                    ? 'Từ 6-12 tháng'
-                    : service.ageRange === '1_to_7_years'
-                    ? 'Từ 1-7 năm'
-                    : 'Trên 7 năm'}
+                  <strong>Loại dịch vụ:</strong>{' '}
+                  {service.type === 'health' ? 'Sức khỏe' : service.type === 'grooming' ? 'Grooming' : 'Khách sạn'}
                 </p>
                 <p className="card-text text-muted mb-2">
                   <strong>Thời gian thực hiện:</strong> {service.duration}
@@ -184,6 +250,22 @@ const ServiceDetail = () => {
                 <p className="card-text text-muted mb-4">
                   <strong>Mô tả dịch vụ:</strong> {service.description}
                 </p>
+                {service.subServices && service.subServices.length > 0 && (
+                  <>
+                    <h5 className="mb-3">Dịch vụ con:</h5>
+                    <ul className="list-group mb-4">
+                      {service.subServices.map((subService) => (
+                        <li key={subService._id} className="list-group-item d-flex justify-content-between align-items-center">
+                          <div>
+                            <strong>{subService.name}</strong>
+                            <p className="mb-0 text-muted">{subService.description}</p>
+                          </div>
+                          <span className="text-primary">{subService.price.toLocaleString()} VNĐ</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
                 <div className="d-flex gap-2">
                   <button
                     className="btn btn-primary"
@@ -250,6 +332,50 @@ const ServiceDetail = () => {
                     />
                   </div>
                   <div className="mb-3">
+                    <label htmlFor="petId" className="form-label">
+                      Thú cưng
+                    </label>
+                    <select
+                      className="form-control"
+                      id="petId"
+                      name="petId"
+                      value={bookingForm.petId}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {pets.length === 0 ? (
+                        <option value="">Không có thú cưng nào</option>
+                      ) : (
+                        pets.map((pet) => (
+                          <option key={pet._id} value={pet._id}>
+                            {pet.name} ({pet.type})
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </div>
+                  {service.subServices && service.subServices.length > 0 && (
+                    <div className="mb-3">
+                      <label htmlFor="subServiceId" className="form-label">
+                        Chọn dịch vụ con
+                      </label>
+                      <select
+                        className="form-control"
+                        id="subServiceId"
+                        name="subServiceId"
+                        value={bookingForm.subServiceId}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        {service.subServices.map((subService) => (
+                          <option key={subService._id} value={subService._id}>
+                            {subService.name} - {subService.price.toLocaleString()} VNĐ
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div className="mb-3">
                     <label htmlFor="bookingDate" className="form-label">
                       Ngày đặt
                     </label>
@@ -277,6 +403,38 @@ const ServiceDetail = () => {
                       required
                     />
                   </div>
+                  {service.type === 'hotel' && (
+                    <>
+                      <div className="mb-3">
+                        <label htmlFor="checkIn" className="form-label">
+                          Ngày check-in
+                        </label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          id="checkIn"
+                          name="checkIn"
+                          value={bookingForm.checkIn}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="checkOut" className="form-label">
+                          Ngày check-out
+                        </label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          id="checkOut"
+                          name="checkOut"
+                          value={bookingForm.checkOut}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+                    </>
+                  )}
                   {bookingError && <div className="alert alert-danger">{bookingError}</div>}
                   <button type="submit" className="btn btn-primary w-100" disabled={!isValidBooking}>
                     Xác nhận đặt dịch vụ
@@ -336,6 +494,7 @@ const ServiceDetail = () => {
                       required
                     />
                   </div>
+                  {error && <div className="alert alert-danger">{error}</div>}
                   <button type="submit" className="btn btn-primary w-100">
                     Đăng nhập
                   </button>

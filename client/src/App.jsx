@@ -16,13 +16,25 @@ import Consulting from './pages/Consulting';
 import NewsDetail from './pages/NewsDetail';
 import ProductDetail from './pages/ProductDetail';
 import ServiceDetail from './pages/ServiceDetail';
-import ActiveBookings from './pages/ActiveBookings'; 
-import BookingHistory from './pages/BookingHistory'; 
+import ActiveBookings from './pages/ActiveBookings';
+import BookingHistory from './pages/BookingHistory';
+import Login from './pages/Login'; // Import trang Login
+import Register from './pages/Register'; // Import trang Register
+import Account from './pages/Account';
+import MyPets from './pages/MyPets';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   if (!token || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+const AuthenticatedRedirect = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (token) {
     return <Navigate to="/" replace />;
   }
   return children;
@@ -32,6 +44,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Routes sử dụng Layout (cho người dùng thông thường) */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
@@ -43,6 +56,8 @@ function App() {
           <Route path="news" element={<News />} />
           <Route path="news/:id" element={<NewsDetail />} />
           <Route path="consulting" element={<Consulting />} />
+          <Route path="account" element={<Account />} />
+          <Route path="mypets" element={<MyPets />} />
           <Route
             path="active-bookings"
             element={
@@ -50,7 +65,7 @@ function App() {
                 <ActiveBookings />
               </ProtectedRoute>
             }
-          /> {/* Route cho dịch vụ đang đặt, chỉ cho user */}
+          />
           <Route
             path="booking-history"
             element={
@@ -58,8 +73,10 @@ function App() {
                 <BookingHistory />
               </ProtectedRoute>
             }
-          /> {/* Route cho lịch sử, chỉ cho user */}
+          />
         </Route>
+
+        {/* Routes cho admin */}
         <Route
           path="/admin/*"
           element={
@@ -75,6 +92,24 @@ function App() {
           <Route path="news" element={<NewsManagement />} />
           <Route path="users" element={<UserManagement />} />
         </Route>
+
+        {/* Routes cho đăng nhập và đăng ký */}
+        <Route
+          path="/login"
+          element={
+            <AuthenticatedRedirect>
+              <Login />
+            </AuthenticatedRedirect>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <AuthenticatedRedirect>
+              <Register />
+            </AuthenticatedRedirect>
+          }
+        />
       </Routes>
     </Router>
   );

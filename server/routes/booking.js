@@ -5,5 +5,6 @@ const bookingController = require('../controllers/bookingController');
 
 router.post('/', auth, bookingController.createBooking);
 router.get('/', auth, bookingController.getAllBookings);
+router.post('/services/:serviceId/check-availability', auth, bookingController.checkAvailability);
 
 module.exports = router;

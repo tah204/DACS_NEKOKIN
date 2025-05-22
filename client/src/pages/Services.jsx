@@ -4,11 +4,9 @@ import axios from 'axios';
 
 const Services = () => {
   const [services, setServices] = useState([]);
-  const [petTypeFilter, setPetTypeFilter] = useState('all');
-  const [ageRangeFilter, setAgeRangeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const servicesPerPage = 6; // Giảm số lượng dịch vụ mỗi trang để giống bố cục hình ảnh
+  const servicesPerPage = 6;
 
   const removeAccents = (str) => {
     return str
@@ -40,12 +38,10 @@ const Services = () => {
   }, [currentPage]);
 
   const filteredServices = services.filter((service) => {
-    const matchesPetType = petTypeFilter === 'all' || service.petType === petTypeFilter;
-    const matchesAgeRange = ageRangeFilter === 'all' || service.ageRange === ageRangeFilter;
     const serviceNameNoAccents = removeAccents(service.name).toLowerCase();
     const searchQueryNoAccents = removeAccents(searchQuery).toLowerCase();
     const matchesSearch = serviceNameNoAccents.includes(searchQueryNoAccents);
-    return matchesPetType && matchesAgeRange && matchesSearch;
+    return matchesSearch;
   });
 
   const totalPages = Math.ceil(filteredServices.length / servicesPerPage);
@@ -73,7 +69,7 @@ const Services = () => {
               Dịch vụ
             </h2>
             <img
-              src="/images/tamspa.jpg" // Thay bằng đường dẫn hình ảnh thực tế (ví dụ phẫu thuật)
+              src="/images/tamspa.jpg"
               alt="Dịch vụ chăm sóc thú cưng"
               className="img-fluid rounded shadow"
               style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
@@ -83,7 +79,7 @@ const Services = () => {
           <div className="col-12 col-md-6">
             <p className="lead text-muted">
               Dịch vụ bạn đang tìm kiếm nằm tại đây! Chúng tôi cung cấp các giải pháp chăm sóc chuyên nghiệp và tận tâm
-              cho thú cưng của bạn, từ phẫu thuật đến chăm sóc hàng ngày. Hãy khám phá và chọn dịch vụ phù hợp!
+              cho thú cưng của bạn, từ kiểm tra sức khỏe, chăm sóc lông đến khách sạn lưu trú. Hãy khám phá và chọn dịch vụ phù hợp!
             </p>
             <button className="btn btn-primary mt-3">Xem thêm</button>
           </div>
@@ -91,40 +87,6 @@ const Services = () => {
 
         {/* Bộ lọc */}
         <div className="row mb-5 g-3 justify-content-center">
-          <div className="col-12 col-md-3">
-            <select
-              value={petTypeFilter}
-              onChange={(e) => {
-                setPetTypeFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="form-select shadow-sm"
-              style={{ borderRadius: '20px', padding: '10px' }}
-            >
-              <option value="all">Tất cả thú cưng</option>
-              <option value="dog">Chó</option>
-              <option value="cat">Mèo</option>
-              <option value="both">Chó và Mèo</option>
-            </select>
-          </div>
-          <div className="col-12 col-md-3">
-            <select
-              value={ageRangeFilter}
-              onChange={(e) => {
-                setAgeRangeFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="form-select shadow-sm"
-              style={{ borderRadius: '20px', padding: '10px' }}
-            >
-              <option value="all">Tất cả độ tuổi</option>
-              <option value="under_2_months">Dưới 2 tháng</option>
-              <option value="2_to_6_months">Từ 2-6 tháng</option>
-              <option value="6_to_12_months">Từ 6-12 tháng</option>
-              <option value="1_to_7_years">Từ 1-7 năm</option>
-              <option value="over_7_years">Trên 7 năm</option>
-            </select>
-          </div>
           <div className="col-12 col-md-3">
             <input
               type="text"
@@ -154,7 +116,7 @@ const Services = () => {
                     style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: '#1e3a8a', color: '#fff' }}
                   >
                     <img
-                      src={`/images/${service.image}`}
+                      src={service.image ? `/images/${service.image}` : '/images/default_service.jpg'}
                       alt={service.name}
                       className="card-img-top img-fluid"
                       onError={(e) => (e.target.src = '/images/default_service.jpg')}
@@ -234,7 +196,7 @@ const Services = () => {
         <div className="row align-items-center mb-5 py-5 bg-white shadow-sm">
           <div className="col-12 col-md-6 order-md-2">
             <img
-              src="/images/stress.jpg" // Thay bằng hình ảnh thú bông thực tế
+              src="/images/stress.jpg"
               alt="Triết lý ADI"
               className="img-fluid rounded"
               style={{ maxHeight: '300px', objectFit: 'contain' }}
@@ -258,7 +220,7 @@ const Services = () => {
         <div className="row align-items-center mb-5 py-5 bg-light">
           <div className="col-12 col-md-6">
             <img
-              src="/images/petfun.jpg" // Thay bằng hình ảnh thú cưng thực tế
+              src="/images/petfun.jpg"
               alt="Chăm sóc tận tâm"
               className="img-fluid rounded shadow"
               style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
