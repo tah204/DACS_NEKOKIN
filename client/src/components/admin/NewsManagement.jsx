@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 const NewsManagement = () => {
   const [news, setNews] = useState([]);
@@ -43,6 +45,27 @@ const NewsManagement = () => {
       console.error('Error adding news:', error);
     }
   };
+
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/news')
+      .then((response) => {
+        const sortedNews = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setNews(sortedNews);
+
+        const extractedTopics = [...new Set(response.data.map(item => item.topic))];
+        setTopics(extractedTopics);
+      })
+      .catch((error) => console.error('Error fetching news:', error));
+  }, []);
+
+  const [selectedTopic, setSelectedTopic] = useState('Tất cả');
+
+  const filteredNews = selectedTopic === 'Tất cả'
+    ? news
+    : news.filter(item => item.topic === selectedTopic);
+
 
   return (
     <div className="card p-4">
