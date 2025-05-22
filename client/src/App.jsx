@@ -16,10 +16,10 @@ import Consulting from './pages/Consulting';
 import NewsDetail from './pages/NewsDetail';
 import ProductDetail from './pages/ProductDetail';
 import ServiceDetail from './pages/ServiceDetail';
-import ActiveBookings from './pages/ActiveBookings';
+import ActiveBookings from './pages/MyBookings';
 import BookingHistory from './pages/BookingHistory';
-import Login from './pages/Login'; // Import trang Login
-import Register from './pages/Register'; // Import trang Register
+import Login from './pages/Login'; 
+import Register from './pages/Register'; 
 import Account from './pages/Account';
 import MyPets from './pages/MyPets';
 
@@ -59,7 +59,7 @@ function App() {
           <Route path="account" element={<Account />} />
           <Route path="mypets" element={<MyPets />} />
           <Route
-            path="active-bookings"
+            path="mybookings"
             element={
               <ProtectedRoute allowedRoles={['user']}>
                 <ActiveBookings />

@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const MyBooking = () => {
-  const [completedBookings, setCompletedBookings] = useState([]);
+const MyBookings = () => {
+  const [bookings, setBookings] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserAndCompletedBookings = async () => {
+    const fetchUserAndBookings = async () => {
       try {
         // Lấy thông tin người dùng từ localStorage hoặc API
         const storedUser = localStorage.getItem('user');
         const token = localStorage.getItem('token');
 
         if (!token) {
-          setError('Vui lòng đăng nhập để xem lịch sử dịch vụ đã sử dụng.');
+          setError('Vui lòng đăng nhập để xem lịch sử đặt dịch vụ.');
           setLoading(false);
           return;
         }
@@ -41,37 +41,56 @@ const MyBooking = () => {
         const bookingResponse = await axios.get('http://localhost:5000/api/bookings', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        // Lọc các booking có trạng thái completed
-        const completed = bookingResponse.data.filter((booking) => booking.status === 'completed');
-        setCompletedBookings(completed);
+        setBookings(bookingResponse.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching completed bookings:', error.response?.data || error.message);
+        console.error('Error fetching bookings:', error.response?.data || error.message);
         if (error.response?.status === 401) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
         } else {
-          setError('Không thể tải lịch sử dịch vụ đã sử dụng. Vui lòng thử lại sau.');
+          setError('Không thể tải lịch sử đặt dịch vụ. Vui lòng thử lại sau.');
         }
         setLoading(false);
       }
     };
 
-    fetchUserAndCompletedBookings();
+    fetchUserAndBookings();
   }, []);
+
+  const handleCancelBooking = async (bookingId) => {
+    if (!window.confirm('Bạn có chắc chắn muốn hủy đặt dịch vụ này?')) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `http://localhost:5000/api/bookings/${bookingId}`,
+        { status: 'canceled' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setBookings((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking._id === bookingId ? { ...booking, status: 'canceled' } : booking
+        )
+      );
+      alert('Hủy đặt dịch vụ thành công.');
+    } catch (error) {
+      console.error('Error canceling booking:', error.response?.data || error.message);
+      alert(error.response?.data?.message || 'Hủy đặt dịch vụ thất bại. Vui lòng thử lại.');
+    }
+  };
 
   if (loading) return <div className="text-center py-5">Đang tải...</div>;
   if (error) return <div className="text-center py-5 text-danger">{error}</div>;
 
   return (
-    <section className="my-booking-section py-5 bg-light">
+    <section className="booking-history-section py-5 bg-light">
       <div className="container">
-        <h2 className="text-center mb-4">Lịch Sử Dịch Vụ Đã Sử Dụng</h2>
-        {completedBookings.length === 0 ? (
+        <h2 className="text-center mb-4">Dịch Vụ Đang Đặt</h2>
+        {bookings.length === 0 ? (
           <div className="text-center">
-            <p>Bạn chưa có dịch vụ nào đã hoàn thành.</p>
+            <p>Bạn chưa có đặt dịch vụ nào.</p>
             <Link to="/services" className="btn btn-primary">
               Đặt Dịch Vụ Ngay
             </Link>
@@ -87,22 +106,47 @@ const MyBooking = () => {
                   <th>Trạng Thái</th>
                   <th>Check-In</th>
                   <th>Check-Out</th>
+                  <th>Hành Động</th>
                 </tr>
               </thead>
               <tbody>
-                {completedBookings.map((booking) => (
+                {bookings.map((booking) => (
                   <tr key={booking._id}>
                     <td>{booking.serviceId?.name || 'Không xác định'}</td>
                     <td>{booking.petId?.name || 'Không xác định'}</td>
                     <td>{new Date(booking.bookingDate).toLocaleString('vi-VN')}</td>
                     <td>
-                      <span className="badge bg-primary">Đã hoàn thành</span>
+                      <span
+                        className={`badge ${
+                          booking.status === 'active'
+                            ? 'bg-success'
+                            : booking.status === 'completed'
+                            ? 'bg-primary'
+                            : 'bg-danger'
+                        }`}
+                      >
+                        {booking.status === 'active'
+                          ? 'Đang hoạt động'
+                          : booking.status === 'completed'
+                          ? 'Đã hoàn thành'
+                          : 'Đã hủy'}
+                      </span>
                     </td>
                     <td>
                       {booking.checkIn ? new Date(booking.checkIn).toLocaleDateString('vi-VN') : 'Không áp dụng'}
                     </td>
                     <td>
                       {booking.checkOut ? new Date(booking.checkOut).toLocaleDateString('vi-VN') : 'Không áp dụng'}
+                    </td>
+                    <td>
+                      {booking.status === 'active' && (
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleCancelBooking(booking._id)}
+                        >
+                          Hủy
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -115,4 +159,4 @@ const MyBooking = () => {
   );
 };
 
-export default MyBooking;
+export default MyBookings;

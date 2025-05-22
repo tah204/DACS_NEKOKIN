@@ -12,20 +12,19 @@ const ServiceDetail = () => {
   const [bookingError, setBookingError] = useState('');
   const [isValidBooking, setIsValidBooking] = useState(false);
   const [bookingForm, setBookingForm] = useState({
-    customerName: '',
-    phone: '',
     bookingDate: '',
     bookingTime: '',
     serviceId: id,
     subServiceId: '', // Thêm trường để chọn subService
-    petId: '', // Thêm trường petId
-    checkIn: '', // Thêm trường checkIn cho hotel
-    checkOut: '', // Thêm trường checkOut cho hotel
+    petId: '', // Chọn từ danh sách thú cưng
+    checkIn: '', // Chỉ cho hotel
+    checkOut: '', // Chỉ cho hotel
   });
   const [loginForm, setLoginForm] = useState({
     username: '',
     password: '',
   });
+  const [user, setUser] = useState(null); // Lưu thông tin người dùng sau khi đăng nhập
 
   useEffect(() => {
     let mounted = true;
@@ -45,14 +44,39 @@ const ServiceDetail = () => {
           setService(serviceResponse.data);
           setBookingForm((prev) => ({
             ...prev,
-            serviceId: id,
-            subServiceId: serviceResponse.data.subServices?.[0]?._id || '', // Mặc định chọn subService đầu tiên
+            subServiceId: serviceResponse.data.subServices?.[0]?._id || '',
           }));
         }
 
-        // Lấy danh sách thú cưng (nếu đã đăng nhập)
+        // Lấy thông tin người dùng từ localStorage hoặc API
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          if (mounted) setUser(userData);
+          console.log('User data from localStorage:', userData); // Debug
+        }
+
         const token = localStorage.getItem('token');
         if (token) {
+          try {
+            const userResponse = await axios.get('http://localhost:5000/auth/user/profile', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (mounted) {
+              setUser(userResponse.data);
+              console.log('User data from API:', userResponse.data); // Debug
+              localStorage.setItem('user', JSON.stringify(userResponse.data));
+            }
+          } catch (error) {
+            console.error('Error fetching user profile:', error.response?.data?.message || error.message);
+            if (error.response?.status === 401) {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              setShowLoginModal(true);
+              setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            }
+          }
+
           const petResponse = await axios.get('http://localhost:5000/api/pets', {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -61,7 +85,7 @@ const ServiceDetail = () => {
             if (petResponse.data.length > 0) {
               setBookingForm((prev) => ({
                 ...prev,
-                petId: petResponse.data[0]._id, // Mặc định chọn thú cưng đầu tiên
+                petId: petResponse.data[0]._id,
               }));
             }
           }
@@ -152,16 +176,57 @@ const ServiceDetail = () => {
       return;
     }
 
+    console.log('Current user state before booking:', user); // Debug
+
     if (!isValidBooking) return;
 
+    // Thử lấy lại user từ API nếu chưa sẵn sàng
+    if (!user || !user.customerId) {
+      try {
+        const userResponse = await axios.get('http://localhost:5000/auth/user/profile', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(userResponse.data);
+        console.log('Refetched user data:', userResponse.data); // Debug
+        localStorage.setItem('user', JSON.stringify(userResponse.data));
+      } catch (error) {
+        console.error('Error refetching user:', error.response?.data?.message || error.message);
+        setBookingError('Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.');
+        setShowLoginModal(true);
+        return;
+      }
+    }
+
+    if (!user.customerId) {
+      console.log('User data missing fields:', user); // Debug
+      setBookingError('Thông tin người dùng không đầy đủ (thiếu customerId). Vui lòng đăng nhập lại.');
+      setShowLoginModal(true);
+      return;
+    }
+
+    // Kiểm tra dữ liệu trước khi gửi
+    if (!bookingForm.petId || !bookingForm.serviceId) {
+      setBookingError('Vui lòng chọn thú cưng và dịch vụ.');
+      return;
+    }
+
+    if (service?.type === 'hotel' && (!bookingForm.checkIn || !bookingForm.checkOut)) {
+      setBookingError('Vui lòng chọn ngày check-in và check-out.');
+      return;
+    }
+
     const bookingDateTime = new Date(`${bookingForm.bookingDate}T${bookingForm.bookingTime}:00+07:00`);
+    if (isNaN(bookingDateTime)) {
+      setBookingError('Ngày đặt không hợp lệ.');
+      return;
+    }
+
     try {
       const bookingData = {
-        customerName: bookingForm.customerName,
-        phone: bookingForm.phone,
+        customerId: user.customerId,
         bookingDate: bookingDateTime.toISOString(),
         serviceId: bookingForm.serviceId,
-        subServiceId: bookingForm.subServiceId,
+        subServiceId: bookingForm.subServiceId || undefined,
         petId: bookingForm.petId,
         ...(service?.type === 'hotel' && {
           checkIn: new Date(bookingForm.checkIn).toISOString(),
@@ -169,19 +234,19 @@ const ServiceDetail = () => {
         }),
       };
 
+      console.log('Booking data sent:', bookingData); // Debug
+
       const response = await axios.post('http://localhost:5000/api/bookings', bookingData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setShowBookingModal(false);
       setBookingForm({
-        customerName: '',
-        phone: '',
         bookingDate: '',
         bookingTime: '',
         serviceId: id,
-        subServiceId: '',
-        petId: '',
+        subServiceId: service?.subServices?.[0]?._id || '',
+        petId: pets.length > 0 ? pets[0]._id : '',
         checkIn: '',
         checkOut: '',
       });
@@ -189,8 +254,8 @@ const ServiceDetail = () => {
       setIsValidBooking(false);
       alert('Đặt lịch thành công! Vui lòng kiểm tra tại "Dịch vụ đang đặt".');
     } catch (error) {
-      console.error('Error booking:', error.response ? error.response.data : error.message);
-      setBookingError(error.response?.data?.message || 'Đặt lịch thất bại.');
+      console.error('Error booking:', error.response?.data || error.message);
+      setBookingError(error.response?.data?.message || 'Đặt lịch thất bại. Vui lòng thử lại.');
     }
   };
 
@@ -199,7 +264,10 @@ const ServiceDetail = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/login', loginForm);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      const userData = response.data.user;
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData); // Cập nhật thông tin người dùng
+      console.log('User data after login:', userData); // Debug
       setShowLoginModal(false);
       setShowBookingModal(true);
 
@@ -301,36 +369,6 @@ const ServiceDetail = () => {
               </div>
               <div className="modal-body">
                 <form onSubmit={handleBookingSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="customerName" className="form-label">
-                      Tên khách hàng
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="customerName"
-                      name="customerName"
-                      value={bookingForm.customerName}
-                      onChange={handleInputChange}
-                      placeholder="Nhập tên"
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">
-                      Số điện thoại
-                    </label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      id="phone"
-                      name="phone"
-                      value={bookingForm.phone}
-                      onChange={handleInputChange}
-                      placeholder="Nhập số điện thoại"
-                      required
-                    />
-                  </div>
                   <div className="mb-3">
                     <label htmlFor="petId" className="form-label">
                       Thú cưng

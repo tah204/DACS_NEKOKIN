@@ -26,12 +26,12 @@ exports.register = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, username: user.username, role: 'user', customerId: user.customerId },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '1h' }
     );
 
     res.status(201).json({
       message: 'Đăng ký thành công',
-      user: { username: user.username, email: user.email, role: 'user' },
+      user: { username: user.username, email: user.email, role: 'user', customerId: user.customerId },
       token
     });
   } catch (error) {
@@ -55,13 +55,19 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role || 'user', customerId: user.customerId?._id },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '1h' }
     );
 
     console.log('Login successful:', user);
     res.json({
       message: 'Đăng nhập thành công',
-      user: { username: user.username, email: user.email, role: user.role || 'user', customerId: user.customerId?._id },
+      user: {
+        username: user.username,
+        email: user.email,
+        role: user.role || 'user',
+        customerId: user.customerId?._id,
+        customer: user.customerId
+      },
       token
     });
   } catch (error) {
@@ -82,6 +88,7 @@ exports.getProfile = async (req, res) => {
     res.json({
       username: user.username,
       email: user.email,
+      role: user.role || 'user',
       customerId: user.customerId?._id,
       customer: user.customerId,
     });

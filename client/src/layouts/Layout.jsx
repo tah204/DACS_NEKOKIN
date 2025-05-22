@@ -141,7 +141,7 @@ const Layout = () => {
                             transition: 'background-color 0.2s',
                             color: '#333',
                           }}
-                          onClick={() => handleNavigate('/active-bookings')}
+                          onClick={() => handleNavigate('/mybookings')}
                           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e6e6fa')}
                           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                         >
