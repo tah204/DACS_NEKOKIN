@@ -71,13 +71,13 @@ const MyPets = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ color: '#fff', minHeight: '80vh' }}>
+    <div className="container mt-5" style={{ minHeight: '80vh' }}>
       <h2 className="mb-4 text-center" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold' }}>
         Thú cưng của tôi
       </h2>
       <div className="row justify-content-center">
         <div className="col-md-8 col-lg-6">
-          <div className="card p-4 shadow-sm mb-4" style={{ backgroundColor: '#2c2c2c', borderRadius: '15px', border: 'none' }}>
+          <div className="card p-4 shadow-sm mb-4" style={{ borderRadius: '15px', border: 'none', backgroundColor: '#f8f9fa' }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 style={{ fontFamily: 'Quicksand, sans-serif', margin: 0 }}>
                 Thêm thú cưng mới
@@ -111,13 +111,7 @@ const MyPets = () => {
                     name="name"
                     value={newPet.name}
                     onChange={handleChange}
-                    style={{
-                      backgroundColor: '#fff',
-                      color: '#000',
-                      borderRadius: '8px',
-                      border: 'none',
-                      fontFamily: 'Quicksand, sans-serif'
-                    }}
+                    style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                   />
                 </div>
                 <div className="mb-3">
@@ -129,13 +123,7 @@ const MyPets = () => {
                     name="type"
                     value={newPet.type}
                     onChange={handleChange}
-                    style={{
-                      backgroundColor: '#fff',
-                      color: '#000',
-                      borderRadius: '8px',
-                      border: 'none',
-                      fontFamily: 'Quicksand, sans-serif'
-                    }}
+                    style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                   >
                     <option value="cat">Mèo</option>
                     <option value="dog">Chó</option>
@@ -151,13 +139,7 @@ const MyPets = () => {
                     name="ageRange"
                     value={newPet.ageRange}
                     onChange={handleChange}
-                    style={{
-                      backgroundColor: '#fff',
-                      color: '#000',
-                      borderRadius: '8px',
-                      border: 'none',
-                      fontFamily: 'Quicksand, sans-serif'
-                    }}
+                    style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                   >
                     <option value="under_2_months">Dưới 2 tháng</option>
                     <option value="2_to_6_months">2-6 tháng</option>
@@ -200,7 +182,7 @@ const MyPets = () => {
               <div
                 key={pet._id}
                 className="card p-3 mb-3 shadow-sm"
-                style={{ backgroundColor: '#3a3a3a', borderRadius: '10px', border: 'none' }}
+                style={{ borderRadius: '10px', border: 'none', backgroundColor: '#ffffff' }}
               >
                 {editPet && editPet._id === pet._id ? (
                   <>
@@ -214,13 +196,7 @@ const MyPets = () => {
                         name="name"
                         value={editPet.name}
                         onChange={handleChange}
-                        style={{
-                          backgroundColor: '#fff',
-                          color: '#000',
-                          borderRadius: '8px',
-                          border: 'none',
-                          fontFamily: 'Quicksand, sans-serif'
-                        }}
+                        style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                       />
                     </div>
                     <div className="mb-3">
@@ -232,13 +208,7 @@ const MyPets = () => {
                         name="type"
                         value={editPet.type}
                         onChange={handleChange}
-                        style={{
-                          backgroundColor: '#fff',
-                          color: '#000',
-                          borderRadius: '8px',
-                          border: 'none',
-                          fontFamily: 'Quicksand, sans-serif'
-                        }}
+                        style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                       >
                         <option value="cat">Mèo</option>
                         <option value="dog">Chó</option>
@@ -254,13 +224,7 @@ const MyPets = () => {
                         name="ageRange"
                         value={editPet.ageRange}
                         onChange={handleChange}
-                        style={{
-                          backgroundColor: '#fff',
-                          color: '#000',
-                          borderRadius: '8px',
-                          border: 'none',
-                          fontFamily: 'Quicksand, sans-serif'
-                        }}
+                        style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                       >
                         <option value="under_2_months">Dưới 2 tháng</option>
                         <option value="2_to_6_months">2-6 tháng</option>

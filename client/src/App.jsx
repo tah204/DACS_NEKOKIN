@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -10,18 +10,38 @@ import UserManagement from './components/admin/UserManagement';
 import Home from './pages/Home';
 import About from './pages/About';
 import Product from './pages/Products';
-import Services from './pages/Services';
 import News from './pages/News';
 import Consulting from './pages/Consulting';
 import NewsDetail from './pages/NewsDetail';
 import ProductDetail from './pages/ProductDetail';
-import ServiceDetail from './pages/ServiceDetail';
 import ActiveBookings from './pages/MyBookings';
 import BookingHistory from './pages/BookingHistory';
-import Login from './pages/Login'; 
-import Register from './pages/Register'; 
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Account from './pages/Account';
 import MyPets from './pages/MyPets';
+import Services from './pages/Services';
+import ServiceHealthDetail from './pages/ServiceHealthDetail';
+import ServiceGroomDetail from './pages/ServiceGroomDetail';
+import ServiceHotelDetail from './pages/ServiceHotelDetail';
+
+// Component trung gian để chọn đúng trang chi tiết dựa trên category ID
+const CategoryServiceDetail = () => {
+  const { id } = useParams(); // Lấy categoryId từ URL
+  const categoryId = parseInt(id, 10);
+
+  // Chọn component dựa trên categoryId
+  switch (categoryId) {
+    case 1:
+      return <ServiceHealthDetail />;
+    case 2:
+      return <ServiceGroomDetail />;
+    case 3:
+      return <ServiceHotelDetail />;
+    default:
+      return <Navigate to="/services" replace />; // Nếu không tìm thấy danh mục, chuyển hướng về trang Services
+  }
+};
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
@@ -52,7 +72,7 @@ function App() {
           <Route path="products" element={<Product />} />
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="services" element={<Services />} />
-          <Route path="services/:id" element={<ServiceDetail />} />
+          <Route path="categoryservices/:id" element={<CategoryServiceDetail />} /> {/* Tất cả danh mục dùng Layout */}
           <Route path="news" element={<News />} />
           <Route path="news/:id" element={<NewsDetail />} />
           <Route path="consulting" element={<Consulting />} />
@@ -75,7 +95,7 @@ function App() {
             }
           />
         </Route>
-
+        
         {/* Routes cho admin */}
         <Route
           path="/admin/*"

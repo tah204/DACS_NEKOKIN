@@ -11,7 +11,7 @@ exports.getAllServices = async (req, res) => {
 
 exports.getServiceById = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
+    const service = await Service.findById(req.params.id); // Xóa .populate('category') vì category là số
     if (!service) {
       return res.status(404).json({ message: 'Dịch vụ không tồn tại' });
     }
@@ -21,38 +21,31 @@ exports.getServiceById = async (req, res) => {
   }
 };
 
-exports.createService = async (req, res) => {
-  const { name, description, image, type, totalRooms, subServices } = req.body;
-
-  // Kiểm tra các trường bắt buộc theo schema
-  if (!name || !description || !image || !type) {
-    return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin: name, description, image, type.' });
-  }
-
-  // Kiểm tra totalRooms nếu type là 'hotel'
-  if (type === 'hotel' && (totalRooms === undefined || totalRooms < 0)) {
-    return res.status(400).json({ message: 'Vui lòng cung cấp số lượng phòng hợp lệ cho dịch vụ khách sạn.' });
-  }
-
-  // Kiểm tra subServices nếu có
-  if (subServices && subServices.length > 0) {
-    try {
-      const parsedSubServices = typeof subServices === 'string' ? JSON.parse(subServices) : subServices;
-      for (const subService of parsedSubServices) {
-        if (!subService.name || !subService.price || subService.price < 0) {
-          return res.status(400).json({ message: 'Mỗi subService cần có tên và giá hợp lệ.' });
-        }
-        // Kiểm tra các trường tùy chọn
-        if (subService.description && typeof subService.description !== 'string') {
-          return res.status(400).json({ message: 'Mô tả của subService phải là chuỗi.' });
-        }
-        if (subService.image && typeof subService.image !== 'string') {
-          return res.status(400).json({ message: 'Hình ảnh của subService phải là chuỗi.' });
-        }
-      }
-    } catch (error) {
-      return res.status(400).json({ message: 'Dữ liệu subServices không hợp lệ.' });
+exports.getServicesByCategory = async (req, res) => {
+  try {
+    const categoryId = parseInt(req.params.id);
+    if (isNaN(categoryId)) {
+      return res.status(400).json({ message: 'categoryId phải là một số hợp lệ' });
     }
+    const services = await Service.find({ category: categoryId });
+    if (!services || services.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy dịch vụ nào thuộc danh mục này' });
+    }
+    res.status(200).json(services);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy dịch vụ theo danh mục', error: error.message });
+  }
+};
+
+exports.createService = async (req, res) => {
+  const { name, description, image, category, price, totalRooms } = req.body;
+
+  if (!name || !description || !image || !category || !price) {
+    return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin: name, description, image, category, price.' });
+  }
+
+  if (category === 3 && (totalRooms === undefined || totalRooms < 0)) {
+    return res.status(400).json({ message: 'Vui lòng cung cấp số lượng phòng hợp lệ cho dịch vụ khách sạn.' });
   }
 
   try {
@@ -60,9 +53,9 @@ exports.createService = async (req, res) => {
       name,
       description,
       image,
-      type,
-      totalRooms: type === 'hotel' ? totalRooms : undefined,
-      subServices: subServices ? (typeof subServices === 'string' ? JSON.parse(subServices) : subServices) : []
+      price,
+      category,
+      totalRooms: category === 3 ? totalRooms : undefined,
     });
 
     const newService = await service.save();
@@ -74,46 +67,33 @@ exports.createService = async (req, res) => {
 
 exports.updateService = async (req, res) => {
   try {
-    const { name, description, image, type, totalRooms, subServices } = req.body;
+    const { name, description, image, category, price, totalRooms } = req.body;
     const service = await Service.findById(req.params.id);
     if (!service) {
       return res.status(404).json({ message: 'Dịch vụ không tồn tại' });
     }
 
-    // Cập nhật các trường, giữ nguyên giá trị cũ nếu không có dữ liệu mới
     service.name = name || service.name;
     service.description = description || service.description;
     service.image = image || service.image;
-    service.type = type || service.type;
+    service.category = category || service.category;
+    service.price = price || service.price;
 
-    // Xử lý totalRooms dựa trên type
-    if (type && type === 'hotel') {
-      if (totalRooms === undefined || totalRooms < 0) {
-        return res.status(400).json({ message: 'Vui lòng cung cấp số lượng phòng hợp lệ cho dịch vụ khách sạn.' });
-      }
-      service.totalRooms = totalRooms;
-    } else if (type && type !== 'hotel') {
-      service.totalRooms = undefined; // Xóa totalRooms nếu type không phải 'hotel'
-    }
-
-    // Xử lý subServices nếu có
-    if (subServices !== undefined) {
-      const parsedSubServices = typeof subServices === 'string' ? JSON.parse(subServices) : subServices;
-      if (parsedSubServices && parsedSubServices.length > 0) {
-        for (const subService of parsedSubServices) {
-          if (!subService.name || !subService.price || subService.price < 0) {
-            return res.status(400).json({ message: 'Mỗi subService cần có tên và giá hợp lệ.' });
-          }
-          if (subService.description && typeof subService.description !== 'string') {
-            return res.status(400).json({ message: 'Mô tả của subService phải là chuỗi.' });
-          }
-          if (subService.image && typeof subService.image !== 'string') {
-            return res.status(400).json({ message: 'Hình ảnh của subService phải là chuỗi.' });
-          }
+    if (category !== undefined) {
+      if (category === 3) {
+        if (totalRooms === undefined || totalRooms < 0) {
+          return res.status(400).json({ message: 'Vui lòng cung cấp số lượng phòng hợp lệ cho dịch vụ khách sạn.' });
         }
-        service.subServices = parsedSubServices;
+        service.totalRooms = totalRooms;
       } else {
-        service.subServices = []; // Đặt lại subServices thành mảng rỗng nếu không có dữ liệu
+        service.totalRooms = undefined;
+      }
+    } else if (totalRooms !== undefined) {
+      if (service.category === 3) {
+        if (totalRooms < 0) {
+          return res.status(400).json({ message: 'Số lượng phòng không hợp lệ.' });
+        }
+        service.totalRooms = totalRooms;
       }
     }
 

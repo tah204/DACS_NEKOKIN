@@ -1,0 +1,158 @@
+/* src/components/BookingModal.css */
+
+/* General styling for the modal content if needed */
+.modal-content-custom {
+    padding: 20px; /* Giảm padding tổng thể của modal một chút */
+}
+
+/* Custom styles for react-datepicker */
+.react-datepicker {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: none;
+    border-radius: 10px; /* Giảm bo tròn góc một chút */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Giảm bóng đổ một chút */
+    background-color: #ffffff;
+    padding: 15px; /* Giảm padding bên trong lịch một chút */
+    display: inline-block;
+    width: 100%;
+    max-width: 360px; /* Giảm chiều rộng tối đa của toàn bộ lịch */
+}
+
+.react-datepicker__header {
+    background-color: #ffffff;
+    border-bottom: none;
+    padding: 10px 0; /* Giảm padding trên dưới */
+    text-align: center;
+    position: relative;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.react-datepicker__current-month {
+    font-weight: 600;
+    color: #343a40;
+    font-size: 1.3em; /* Giảm kích thước font của tháng/năm */
+    margin-bottom: 8px; /* Giảm khoảng cách với tên ngày */
+}
+
+.react-datepicker__navigation {
+    top: 10px; /* Điều chỉnh vị trí mũi tên */
+    line-height: 1.7em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 4px; /* Giảm vùng click */
+}
+
+.react-datepicker__navigation--previous {
+    left: 10px;
+}
+
+.react-datepicker__navigation--next {
+    right: 10px;
+}
+
+.react-datepicker__navigation-icon::before {
+    border-color: #dc3545;
+    border-width: 2px 2px 0 0;
+    font-size: 1.8em; /* Giảm kích thước mũi tên một chút */
+    height: 12px;
+    width: 12px;
+    top: 0px;
+    left: -2px;
+}
+
+.react-datepicker__month-container {
+    padding: 10px 0; /* Giảm padding cho container tháng */
+}
+
+.react-datepicker__month {
+    margin: 0;
+}
+
+.react-datepicker__week {
+    display: flex;
+    justify-content: space-around;
+}
+
+.react-datepicker__day-names {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 8px; /* Giảm khoảng cách dưới tên ngày */
+}
+
+.react-datepicker__day-name {
+    color: #6c757d;
+    font-weight: bold;
+    width: 2.8em; /* Giảm chiều rộng của tên ngày */
+    text-align: center;
+    margin: 0.15em; /* Điều chỉnh margin nhỏ lại */
+    font-size: 1.1em; /* Giảm kích thước font tên ngày */
+}
+
+.react-datepicker__day,
+.react-datepicker__time-name {
+    width: 2.8em; /* Giảm kích thước chiều rộng của ô ngày */
+    line-height: 2.8em;
+    height: 2.8em; /* Giảm kích thước chiều cao của ô ngày */
+    margin: 0.15em; /* Điều chỉnh margin nhỏ lại */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #495057;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    font-size: 1.1em; /* Giảm kích thước font của số ngày */
+    font-weight: 500;
+}
+
+.react-datepicker__day:hover:not(.react-datepicker__day--disabled):not(.react-datepicker__day--selected) {
+    background-color: #f0f0f0;
+    transform: scale(1.03); /* Hiệu ứng phồng nhẹ hơn khi hover */
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 50%;
+    transform: scale(1.03); /* Hiệu ứng phồng nhẹ hơn khi chọn */
+}
+
+.react-datepicker__day--disabled {
+    color: #ced4da;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+/* Make space for the calendar container inside flex */
+.datepicker-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Adjustments for time picker container for better alignment */
+.timepicker-container {
+    width: 100%;
+    max-width: 300px; /* Giảm chiều rộng tối đa cho khung giờ */
+    align-self: flex-start;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .flex-lg-row {
+        flex-direction: column !important;
+    }
+    .datepicker-container,
+    .timepicker-container {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+    }
+    .react-datepicker {
+        max-width: none;
+    }
+}

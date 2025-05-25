@@ -22,22 +22,18 @@ const bookingSchema = new mongoose.Schema({
   },
   checkIn: {
     type: Date,
-    required: function() {
-      const service = this.serviceId ? mongoose.model('Service').findById(this.serviceId) : null;
-      return service && service.type === 'hotel';
-    }
   },
   checkOut: {
     type: Date,
-    required: function() {
-      const service = this.serviceId ? mongoose.model('Service').findById(this.serviceId) : null;
-      return service && service.type === 'hotel';
-    }
+  },
+  notes: {
+    type: String,
+    default: ''
   },
   status: {
     type: String,
-    enum: ['active', 'completed', 'canceled'],
-    default: 'active'
+    enum: ['pending', 'active', 'completed', 'canceled'],
+    default: 'pending'
   },
   createdAt: {
     type: Date,
@@ -45,37 +41,42 @@ const bookingSchema = new mongoose.Schema({
   }
 });
 
-// Middleware để kiểm tra checkIn và checkOut
 bookingSchema.pre('validate', async function(next) {
   if (this.checkIn && this.checkOut) {
     if (this.checkOut <= this.checkIn) {
-      return next(new Error('Check-out date must be after check-in date'));
+      return next(new Error('Ngày check-out phải sau ngày check-in.'));
     }
   }
 
-  // Kiểm tra tính nhất quán giữa customerId và petId
   const Customer = mongoose.model('Customer');
   const Pet = mongoose.model('Pet');
 
-  const customer = await Customer.findById(this.customerId);
-  const pet = await Pet.findById(this.petId);
+  try {
+    const customer = await Customer.findById(this.customerId);
+    const pet = await Pet.findById(this.petId);
 
-  if (!customer || !pet) {
-    return next(new Error('Customer or Pet not found'));
-  }
+    if (!customer) {
+      return next(new Error('Khách hàng không tìm thấy.'));
+    }
+    if (!pet) {
+      return next(new Error('Thú cưng không tìm thấy.'));
+    }
 
-  if (pet.customerId.toString() !== this.customerId.toString()) {
-    return next(new Error('Pet does not belong to the customer'));
+    if (pet.customerId.toString() !== this.customerId.toString()) {
+      return next(new Error('Thú cưng không thuộc về khách hàng này.'));
+    }
+  } catch (error) {
+    return next(new Error('Lỗi kiểm tra mối quan hệ khách hàng và thú cưng: ' + error.message));
   }
 
   next();
 });
 
-// Index để tối ưu hóa truy vấn
 bookingSchema.index({ customerId: 1 });
 bookingSchema.index({ serviceId: 1 });
 bookingSchema.index({ petId: 1 });
 bookingSchema.index({ serviceId: 1, checkIn: 1, checkOut: 1 });
 bookingSchema.index({ status: 1 });
+bookingSchema.index({ serviceId: 1, bookingDate: 1 }); // Thêm index tối ưu cho truy vấn getAvailableTimes
 
 module.exports = mongoose.model('Booking', bookingSchema);

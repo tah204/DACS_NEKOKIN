@@ -4,21 +4,12 @@ import axios from 'axios';
 
 const Services = () => {
   const [services, setServices] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const servicesPerPage = 6;
 
-  const removeAccents = (str) => {
-    return str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/đ/g, 'd')
-      .replace(/Đ/g, 'D');
-  };
-
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/services')
+      .get('http://localhost:5000/api/categoryservices')
       .then((response) => setServices(response.data))
       .catch((error) => console.error('Error fetching services:', error));
   }, []);
@@ -37,17 +28,10 @@ const Services = () => {
     }
   }, [currentPage]);
 
-  const filteredServices = services.filter((service) => {
-    const serviceNameNoAccents = removeAccents(service.name).toLowerCase();
-    const searchQueryNoAccents = removeAccents(searchQuery).toLowerCase();
-    const matchesSearch = serviceNameNoAccents.includes(searchQueryNoAccents);
-    return matchesSearch;
-  });
-
-  const totalPages = Math.ceil(filteredServices.length / servicesPerPage);
+  const totalPages = Math.ceil(services.length / servicesPerPage);
   const indexOfLastService = currentPage * servicesPerPage;
   const indexOfFirstService = indexOfLastService - servicesPerPage;
-  const currentServices = filteredServices.slice(indexOfFirstService, indexOfLastService);
+  const currentServices = services.slice(indexOfFirstService, indexOfLastService);
 
   const handlePageChange = (pageNumber) => {
     console.log('Changing to page:', pageNumber);
@@ -85,32 +69,15 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Bộ lọc */}
-        <div className="row mb-5 g-3 justify-content-center">
-          <div className="col-12 col-md-3">
-            <input
-              type="text"
-              placeholder="Tìm kiếm dịch vụ..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="form-control shadow-sm"
-              style={{ borderRadius: '20px', padding: '10px' }}
-            />
-          </div>
-        </div>
-
-        {/* Danh sách dịch vụ */}
+        {/* Danh sách danh mục dịch vụ */}
         <div className="row g-4 mb-5">
           <h3 className="text-center mb-4" style={{ fontSize: '2rem', color: '#1e3a8a' }}>
-            Các dịch vụ dành cho thú cưng
+            Các danh mục dịch vụ cho thú cưng
           </h3>
           {currentServices.length > 0 ? (
             currentServices.map((service) => (
               <div className="col-12 col-sm-6 col-md-4" key={service._id}>
-                <Link to={`/services/${service._id}`} className="text-decoration-none">
+                <Link to={`/categoryservices/${service._id}`} className="text-decoration-none">
                   <div
                     className="card h-100 border-0 shadow-sm"
                     style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: '#1e3a8a', color: '#fff' }}
@@ -127,9 +94,9 @@ const Services = () => {
                         {service.name}
                       </h5>
                       <p className="card-text" style={{ fontSize: '0.9rem' }}>
-                        {service.description.length > 50
+                        {service.description && service.description.length > 50
                           ? `${service.description.substring(0, 50)}...`
-                          : service.description}
+                          : service.description || 'Không có mô tả'}
                       </p>
                     </div>
                   </div>
@@ -138,7 +105,7 @@ const Services = () => {
             ))
           ) : (
             <div className="col-12 text-center">
-              <p className="text-muted">Không tìm thấy dịch vụ phù hợp.</p>
+              <p className="text-muted">Không tìm thấy danh mục dịch vụ.</p>
             </div>
           )}
         </div>

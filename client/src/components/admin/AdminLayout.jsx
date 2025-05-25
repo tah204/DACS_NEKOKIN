@@ -25,12 +25,17 @@ const AdminLayout = () => {
           </li>
           <li className="nav-item mb-2">
             <Link to="/admin/products" className="nav-link text-white">
-              <FaBox className="me-2" /> Quản Lý Sản Phẩm
+              <FaBox className="me-2" /> Quản Lý Khóa Học
             </Link>
           </li>
           <li className="nav-item mb-2">
             <Link to="/admin/services" className="nav-link text-white">
-              <FaConciergeBell className="me-2" /> Quản Lý Dịch Vụ
+              <FaConciergeBell className="me-2" /> Quản Lý Sở Thích
+            </Link>
+          </li>
+          <li className="nav-item mb-2">
+            <Link to="/admin/services" className="nav-link text-white">
+              <FaConciergeBell className="me-2" /> Quản Lý Chuyên Ngành
             </Link>
           </li>
           <li className="nav-item mb-2">

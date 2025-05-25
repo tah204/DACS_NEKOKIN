@@ -35,15 +35,15 @@ const Account = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ color: '#fff', minHeight: '80vh' }}>
-      <h2 className="mb-4 text-center" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold' }}>
+    <div className="container mt-5" style={{ minHeight: '80vh' }}>
+      <h2 className="mb-4 text-center" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold', color: '#333' }}>
         Tài khoản
       </h2>
       <div className="row justify-content-center">
         <div className="col-md-8 col-lg-6">
-          <div className="card p-4 shadow-sm" style={{ backgroundColor: '#2c2c2c', borderRadius: '15px', border: 'none' }}>
+          <div className="card p-4 shadow-sm" style={{ backgroundColor: '#f8f9fa', borderRadius: '15px', border: 'none' }}>
             <div className="mb-3">
-              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif' }}>
+              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif', color: '#555' }}>
                 Tên tài khoản
               </label>
               <input
@@ -52,16 +52,16 @@ const Account = () => {
                 value={user.username || ''}
                 disabled
                 style={{
-                  backgroundColor: '#4a4a4a',
-                  color: '#fff',
+                  backgroundColor: '#e9ecef',
+                  color: '#555',
                   borderRadius: '8px',
-                  border: 'none',
+                  border: '1px solid #ced4da',
                   fontFamily: 'Quicksand, sans-serif'
                 }}
               />
             </div>
             <div className="mb-3">
-              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif' }}>
+              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif', color: '#555' }}>
                 Email
               </label>
               <input
@@ -70,16 +70,16 @@ const Account = () => {
                 value={user.email || ''}
                 disabled
                 style={{
-                  backgroundColor: '#4a4a4a',
-                  color: '#fff',
+                  backgroundColor: '#e9ecef',
+                  color: '#555',
                   borderRadius: '8px',
-                  border: 'none',
+                  border: '1px solid #ced4da',
                   fontFamily: 'Quicksand, sans-serif'
                 }}
               />
             </div>
             <div className="mb-3">
-              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif' }}>
+              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif', color: '#555' }}>
                 Tên khách hàng
               </label>
               <input
@@ -90,16 +90,16 @@ const Account = () => {
                 onChange={handleChange}
                 disabled={!isEditing}
                 style={{
-                  backgroundColor: isEditing ? '#fff' : '#4a4a4a',
-                  color: isEditing ? '#000' : '#fff',
+                  backgroundColor: isEditing ? '#fff' : '#e9ecef',
+                  color: '#555',
                   borderRadius: '8px',
-                  border: 'none',
+                  border: '1px solid #ced4da',
                   fontFamily: 'Quicksand, sans-serif'
                 }}
               />
             </div>
             <div className="mb-3">
-              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif' }}>
+              <label className="form-label" style={{ fontFamily: 'Quicksand, sans-serif', color: '#555' }}>
                 Số điện thoại
               </label>
               <input
@@ -110,10 +110,10 @@ const Account = () => {
                 onChange={handleChange}
                 disabled={!isEditing}
                 style={{
-                  backgroundColor: isEditing ? '#fff' : '#4a4a4a',
-                  color: isEditing ? '#000' : '#fff',
+                  backgroundColor: isEditing ? '#fff' : '#e9ecef',
+                  color: '#555',
                   borderRadius: '8px',
-                  border: 'none',
+                  border: '1px solid #ced4da',
                   fontFamily: 'Quicksand, sans-serif'
                 }}
               />

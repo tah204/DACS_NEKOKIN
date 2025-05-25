@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import HeroIntro from '../components/HeroIntro';
@@ -9,7 +9,7 @@ import '../App.css'; // Đảm bảo đường dẫn đúng với vị trí file
 const Home = () => {
   const [featuredNews, setFeaturedNews] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [featuredServices, setFeaturedServices] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [consultation, setConsultation] = useState({ petName: '', phone: '' });
 
   useEffect(() => {
@@ -27,12 +27,12 @@ const Home = () => {
       })
       .catch((err) => console.error('Error fetching products:', err));
 
-    axios.get('http://localhost:5000/api/services')
+    axios.get('http://localhost:5000/api/categoryservices')
       .then((res) => {
-        const shuffled = res.data.sort(() => 0.5 - Math.random()).slice(0, 4);
-        setFeaturedServices(shuffled);
+        const shuffled = res.data.sort(() => 0.5 - Math.random()).slice(0, 3); // Chỉ lấy 3 danh mục
+        setCategories(shuffled);
       })
-      .catch((err) => console.error('Error fetching services:', err));
+      .catch((err) => console.error('Error fetching categories:', err));
   }, []);
 
   const handleLinkClick = () => {
@@ -114,19 +114,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Dịch vụ */}
+      {/* Danh mục dịch vụ */}
       <motion.section className="py-5" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
         <div className="container">
-          <h2 className="text-center mb-5 intro-title">Sự chăm sóc tốt nhất dành cho thú cưng</h2>
+          <h2 className="text-center mb-5 intro-title">Các danh mục dịch vụ</h2>
           <div className="row g-4">
-            {featuredServices.length > 0 ? (
-              featuredServices.map((service) => (
-                <div key={service._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <Link to={`/services/${service._id}`} className="text-decoration-none text-dark" onClick={handleLinkClick}>
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <div key={category._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <Link to={`/services/category/${category._id}`} className="text-decoration-none text-dark" onClick={handleLinkClick}>
                     <motion.div whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }} className="card h-100 shadow-sm border-0">
-                      <img src={`/images/${service.image}`} className="card-img-top img-fluid card-img-custom" alt={service.name} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
+                      <img src={`/images/${category.image}`} className="card-img-top img-fluid card-img-custom" alt={category.name} onError={(e) => (e.target.src = '/images/default_category.jpg')} />
                       <div className="card-body">
-                        <h3 className="card-title card-title-center">{service.name}</h3>
+                        <h3 className="card-title card-title-center">{category.name}</h3>
                       </div>
                     </motion.div>
                   </Link>
@@ -134,7 +134,7 @@ const Home = () => {
               ))
             ) : (
               <div className="col-12 text-center">
-                <p className="text-muted">Không có dịch vụ nổi bật.</p>
+                <p className="text-muted">Không có danh mục nào.</p>
               </div>
             )}
           </div>

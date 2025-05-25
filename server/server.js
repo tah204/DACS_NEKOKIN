@@ -4,10 +4,11 @@ const express = require('express');
   const dotenv = require('dotenv');
   const productRoutes = require('./routes/products');
   const newsRoutes = require('./routes/news');
+  const categoryServicesRoutes = require('./routes/categoryservices');
   const serviceRoutes = require('./routes/services');
   const authRoutes = require('./routes/auth');
   const bookingRoutes = require('./routes/booking');
-  const petRoutes = require('./routes/pets'); // Thêm route cho Pet
+  const petRoutes = require('./routes/pets');
   const authMiddleware = require('./middleware/authMiddleware');
   const multer = require('multer');
   const path = require('path');
@@ -46,8 +47,9 @@ const express = require('express');
   app.use('/api/products', productRoutes);
   app.use('/api/news', newsRoutes);
   app.use('/api/services', serviceRoutes);
+  app.use('/api/categoryservices', categoryServicesRoutes);
   app.use('/api/bookings', bookingRoutes);
-  app.use('/api/pets', petRoutes); // Thêm route cho Pet
+  app.use('/api/pets', petRoutes);
   app.use('/auth', authRoutes);
 
   // Tạo router riêng cho admin
