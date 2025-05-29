@@ -401,8 +401,8 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                                 onClick={() => handleSelectService(service._id)}
                                                 style={{ cursor: 'pointer', maxWidth: '220px', minWidth: '180px' }}
                                             >
-                                                <img src={service.image} alt={service.name} className="card-img-top mb-2" style={{ height: '100px', objectFit: 'cover' }} />
-                                                <h5 className="card-title text-primary text-center">{service.name}</h5>
+                                                <img src={`/images/${service.image}`} alt={service.name} className="card-img-top mb-2" style={{ height: '100px', objectFit: 'cover' }} />
+                                                <h5 className="card-title text-center">{service.name}</h5>
                                                 <p className="card-text text-muted small text-center flex-grow-1">{service.description.substring(0, 50)}{service.description.length > 50 ? '...' : ''}</p>
                                                 <div className="text-center">
                                                     <span className="badge bg-info text-dark">{service.price?.toLocaleString('vi-VN')} VNĐ</span>

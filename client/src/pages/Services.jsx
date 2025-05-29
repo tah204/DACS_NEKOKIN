@@ -79,7 +79,7 @@ const Services = () => {
                       />
                     </div>
                     <div className="service-card-body">
-                      <h5 className="fw-bold mb-2" style={{ fontFamily: 'Quicksand' }}>{service.name}</h5>
+                      <h5 className="fw-bold mb-2" style={{ color: 'white', fontFamily: 'Quicksand' }}>{service.name}</h5>
                       <p className="mb-3">{service.description || 'Không có mô tả'}</p>
                       <Link
                         to={`/categoryservices/${service._id}`}
