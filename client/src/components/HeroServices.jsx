@@ -1,24 +1,29 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-const HeroAbout = () => {
+const HeroService = () => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/booking');
+    };
+
     return (
         <section
             className="d-flex align-items-center position-relative"
             style={{
                 minHeight: '70vh',
-                backgroundImage: 'url(/images/Pamo-OPPOylaBileCekilemedi-Cok-Yakinda-1.jpg)', // Ảnh nền phù hợp
+                backgroundImage: 'url(/images/thuy-cute-dog-e1684488473597.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            {/* Lớp phủ tối nhẹ để làm nổi chữ */}
             <div
                 className="position-absolute top-0 start-0 w-100 h-100"
                 style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1 }}
             />
-
             <div
                 className="container text-center text-white position-relative"
                 style={{ zIndex: 2 }}
@@ -30,7 +35,7 @@ const HeroAbout = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    Tin tức
+                    Chăm sóc tận tâm
                 </motion.h1>
                 <motion.p
                     className="fs-4 text-center"
@@ -39,15 +44,11 @@ const HeroAbout = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                 >
-                    Thú cưng xứng đáng được hưởng dịch vụ chăm sóc thú y tốt nhất.<br />
-                    Đó chính là điều bạn sẽ nhận được khi tin tưởng vào chúng tôi.
+                    Từ lúc bạn bước vào đến khi rời đi, thú cưng của bạn luôn được yêu thương và chăm sóc như thành viên trong gia đình.
                 </motion.p>
-
-
-
             </div>
         </section>
     );
 };
 
-export default HeroAbout;
+export default HeroService;

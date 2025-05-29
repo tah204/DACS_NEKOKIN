@@ -1,211 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import HeroServices from '../components/HeroServices';
 
 const Services = () => {
   const [services, setServices] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const servicesPerPage = 6;
 
   useEffect(() => {
     axios
       .get('http://localhost:5000/api/categoryservices')
       .then((response) => setServices(response.data))
       .catch((error) => console.error('Error fetching services:', error));
+
+    AOS.init({ duration: 1000 });
   }, []);
 
-  useEffect(() => {
-    console.log('Current page changed:', currentPage);
-    try {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-      console.log('Scrolled to top successfully');
-    } catch (error) {
-      console.error('Error scrolling to top:', error);
-      window.scrollTo(0, 0);
-    }
-  }, [currentPage]);
-
-  const totalPages = Math.ceil(services.length / servicesPerPage);
-  const indexOfLastService = currentPage * servicesPerPage;
-  const indexOfFirstService = indexOfLastService - servicesPerPage;
-  const currentServices = services.slice(indexOfFirstService, indexOfLastService);
-
-  const handlePageChange = (pageNumber) => {
-    console.log('Changing to page:', pageNumber);
-    setCurrentPage(pageNumber);
-  };
-
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
   return (
-    <section className="services-section py-5 bg-light">
-      <div className="container">
-        {/* Phần tiêu đề và mô tả */}
-        <div className="row align-items-center mb-5">
-          <div className="col-12 col-md-6">
-            <h2 className="text-center text-primary mb-4" style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>
-              Dịch vụ
-            </h2>
-            <img
-              src="/images/tamspa.jpg"
-              alt="Dịch vụ chăm sóc thú cưng"
-              className="img-fluid rounded shadow"
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
-              onError={(e) => (e.target.src = '/images/default_service.jpg')}
-            />
-          </div>
-          <div className="col-12 col-md-6">
-            <p className="lead text-muted">
-              Dịch vụ bạn đang tìm kiếm nằm tại đây! Chúng tôi cung cấp các giải pháp chăm sóc chuyên nghiệp và tận tâm
-              cho thú cưng của bạn, từ kiểm tra sức khỏe, chăm sóc lông đến khách sạn lưu trú. Hãy khám phá và chọn dịch vụ phù hợp!
-            </p>
-            <button className="btn btn-primary mt-3">Xem thêm</button>
+    <>
+      {/* Section 1: Giới thiệu */}
+      <section className="py-5 border-bottom" style={{ width: '100%', backgroundColor: '#fff' }}>
+        <div className="container px-4 px-md-5">
+          <div className="row align-items-center gx-5">
+            <div className="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
+              <div
+                style={{
+                  height: '100%',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+                }}
+              >
+                <img
+                  src="/images/1.jpg"
+                  alt="Dịch vụ chăm sóc thú cưng"
+                  className="img-fluid w-100 h-100"
+                  style={{ objectFit: 'cover', maxHeight: '70%' }}
+                  onError={(e) => (e.target.src = '/images/default_service.jpg')}
+                />
+              </div>
+            </div>
+            <div className="col-md-6 ps-md-5" data-aos="fade-left">
+              <h2 className="fw-bold mb-4" style={{ fontSize: '2.5rem', fontFamily: 'Quicksand', color: '#0d2554' }}>
+                Dịch vụ
+              </h2>
+              <p className="text-muted mb-3" style={{ fontSize: '1.1rem', lineHeight: '1.6', textAlign: 'justify' }}>
+                Có một người bạn đồng hành là một niềm vui, và một trách nhiệm quan trọng. Là người có trách nhiệm, bạn muốn thú cưng của mình nhận được tất cả sự chăm sóc và yêu thương mà chúng cần để sống lâu và hạnh phúc. Đó là lý do tại sao sự lựa chọn bác sĩ thú y của bạn là rất quan trọng.
+              </p>
+              <p className="text-muted" style={{ fontSize: '1.1rem', lineHeight: '1.6', textAlign: 'justify' }}>
+                Bạn muốn có một bác sĩ thú y tận tụy để giữ cho thú cưng của bạn khỏe mạnh và hạnh phúc. Một bác sĩ thú y làm việc với bạn không mệt mỏi để đảm bảo sức khỏe toàn diện cho thú cưng của bạn. Và bạn muốn bác sĩ thú y đó làm tốt công việc của mình nhất có thể. Điều đó có nghĩa là họ phải có cơ sở vật chất, công cụ chẩn đoán hạng nhất và các loại thuốc phù hợp.
+              </p>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Danh sách danh mục dịch vụ */}
-        <div className="row g-4 mb-5">
-          <h3 className="text-center mb-4" style={{ fontSize: '2rem', color: '#1e3a8a' }}>
-            Các danh mục dịch vụ cho thú cưng
-          </h3>
-          {currentServices.length > 0 ? (
-            currentServices.map((service) => (
-              <div className="col-12 col-sm-6 col-md-4" key={service._id}>
+      {/* Section 2: Danh sách dịch vụ */}
+      <section className="py-5" style={{ backgroundColor: '#FAF7F1', width: '100%' }}>
+        <div className="container px-4 px-md-5">
+          <h2 className="fw-bold mb-3 text-center" style={{ fontFamily: 'Quicksand', fontSize: '2.5rem', color: '#0d2554' }}>
+            Các dịch vụ
+          </h2>
+          <p className="text-center mb-4" style={{ fontSize: '1.25rem', color: '#555', fontWeight: '500', fontFamily: 'Quicksand' }}>
+            Từ chăm sóc sức khỏe đến làm đẹp, chúng tôi có tất cả!
+          </p>
+          <div className="row g-4">
+            {services.map((service) => (
+              <div className="col-md-4" key={service._id}>
                 <Link to={`/categoryservices/${service._id}`} className="text-decoration-none">
-                  <div
-                    className="card h-100 border-0 shadow-sm"
-                    style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: '#1e3a8a', color: '#fff' }}
-                  >
-                    <img
-                      src={service.image ? `/images/${service.image}` : '/images/default_service.jpg'}
-                      alt={service.name}
-                      className="card-img-top img-fluid"
-                      onError={(e) => (e.target.src = '/images/default_service.jpg')}
-                      style={{ objectFit: 'cover', height: '200px' }}
-                    />
-                    <div className="card-body text-center p-3">
-                      <h5 className="card-title mb-2" style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-                        {service.name}
-                      </h5>
-                      <p className="card-text" style={{ fontSize: '0.9rem' }}>
-                        {service.description && service.description.length > 50
-                          ? `${service.description.substring(0, 50)}...`
-                          : service.description || 'Không có mô tả'}
-                      </p>
+                  <div className="card service-card border-0 shadow-sm h-100">
+                    <div className="service-img-wrapper">
+                      <img
+                        src={`/images/${service.image}`}
+                        alt={service.name}
+                        className="service-img"
+                        onError={(e) => (e.target.src = '/images/default_service.jpg')}
+                      />
+                    </div>
+                    <div className="service-card-body">
+                      <h5 className="fw-bold mb-2" style={{ fontFamily: 'Quicksand' }}>{service.name}</h5>
+                      <p className="mb-3">{service.description || 'Không có mô tả'}</p>
+                      <Link
+                        to={`/categoryservices/${service._id}`}
+                        className="btn p-0 mt-2 fw-semibold"
+                        style={{ color: '#ffffff', backgroundColor: 'transparent', border: 'none', fontSize: '1.2rem' }}
+                      >
+                        →
+                      </Link>
                     </div>
                   </div>
                 </Link>
               </div>
-            ))
-          ) : (
-            <div className="col-12 text-center">
-              <p className="text-muted">Không tìm thấy danh mục dịch vụ.</p>
-            </div>
-          )}
-        </div>
-
-        {/* Phân trang */}
-        {totalPages > 1 && (
-          <div className="row mt-5">
-            <div className="col-12 text-center">
-              <nav aria-label="Page navigation">
-                <ul className="pagination justify-content-center">
-                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      style={{ borderRadius: '20px', margin: '0 5px' }}
-                    >
-                      Trước
-                    </button>
-                  </li>
-                  {pageNumbers.map((number) => (
-                    <li
-                      key={number}
-                      className={`page-item ${currentPage === number ? 'active' : ''}`}
-                    >
-                      <button
-                        className="page-link"
-                        onClick={() => handlePageChange(number)}
-                        style={{
-                          borderRadius: '20px',
-                          margin: '0 5px',
-                          backgroundColor: currentPage === number ? '#007bff' : '',
-                          color: currentPage === number ? '#fff' : '',
-                        }}
-                      >
-                        {number}
-                      </button>
-                    </li>
-                  ))}
-                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      style={{ borderRadius: '20px', margin: '0 5px' }}
-                    >
-                      Sau
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        )}
-
-        {/* Phần Triết lý của ADI */}
-        <div className="row align-items-center mb-5 py-5 bg-white shadow-sm">
-          <div className="col-12 col-md-6 order-md-2">
-            <img
-              src="/images/stress.jpg"
-              alt="Triết lý ADI"
-              className="img-fluid rounded"
-              style={{ maxHeight: '300px', objectFit: 'contain' }}
-              onError={(e) => (e.target.src = '/images/default_service.jpg')}
-            />
-          </div>
-          <div className="col-12 col-md-6 order-md-1">
-            <h3 className="text-primary mb-3" style={{ fontSize: '2rem' }}>
-              Triết lý của ADI
-            </h3>
-            <p className="text-muted">
-              Chúng tôi tin rằng việc chăm sóc thú cưng không chỉ là trách nhiệm mà còn là niềm vui. Với đội ngũ chuyên
-              nghiệp và tận tâm, chúng tôi mang đến sự an toàn và yêu thương cho thú cưng của bạn. Hãy để chúng tôi đồng
-              hành cùng bạn!
-            </p>
-            <button className="btn btn-primary mt-3">Tìm hiểu thêm</button>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Phần Compassionate care */}
-        <div className="row align-items-center mb-5 py-5 bg-light">
-          <div className="col-12 col-md-6">
-            <img
-              src="/images/petfun.jpg"
-              alt="Chăm sóc tận tâm"
-              className="img-fluid rounded shadow"
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
-              onError={(e) => (e.target.src = '/images/default_service.jpg')}
-            />
-          </div>
-          <div className="col-12 col-md-6 text-center">
-            <h3 className="text-primary mb-3" style={{ fontSize: '2.5rem' }}>
-              Compassionate care, right when matters
-            </h3>
-            <p className="text-muted mb-4">
-              Chúng tôi luôn ở đây khi bạn cần, mang đến sự chăm sóc tận tâm cho thú cưng của bạn.
-            </p>
-            <button className="btn btn-primary">Đặt lịch ngay</button>
-          </div>
-        </div>
-      </div>
-    </section>
+      {/* Section 4: Chăm sóc tận tâm */}
+      <HeroServices />
+
+    </>
   );
 };
 

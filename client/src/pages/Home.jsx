@@ -36,7 +36,7 @@ const Home = () => {
   }, []);
 
   const handleLinkClick = () => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleInputChange = (e) => {
@@ -117,12 +117,16 @@ const Home = () => {
       {/* Danh mục dịch vụ */}
       <motion.section className="py-5" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
         <div className="container">
-          <h2 className="text-center mb-5 intro-title">Các danh mục dịch vụ</h2>
-          <div className="row g-4">
+          <h2 className="text-center mb-5 intro-title">Danh mục dịch vụ</h2>
+          <div className="row g-4 justify-content-center">
             {categories.length > 0 ? (
               categories.map((category) => (
                 <div key={category._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <Link to={`/services/category/${category._id}`} className="text-decoration-none text-dark" onClick={handleLinkClick}>
+                  <Link
+                    to={`/services/category/${category._id}`}
+                    className="text-decoration-none text-dark"
+                    onClick={handleLinkClick}
+                  >
                     <motion.div whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }} className="card h-100 shadow-sm border-0">
                       <img src={`/images/${category.image}`} className="card-img-top img-fluid card-img-custom" alt={category.name} onError={(e) => (e.target.src = '/images/default_category.jpg')} />
                       <div className="card-body">

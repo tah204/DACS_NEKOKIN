@@ -25,7 +25,7 @@ const HeroAbout = () => {
             >
                 <motion.h1
                     className="fw-bold mb-4"
-                    style={{ fontFamily: 'Quicksand, sans-serif', fontSize: '3.5rem' }}
+                    style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', fontSize: '3.5rem' }}
                     initial={{ opacity: 0, y: -40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}

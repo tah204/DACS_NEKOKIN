@@ -1,9 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const HeroIntro = () => {
+    const navigate = useNavigate();
+
     const handleClick = () => {
-        alert('Chức năng đặt lịch đang được phát triển...');
+        navigate('/services');
     };
 
     return (
@@ -21,15 +24,13 @@ const HeroIntro = () => {
                 Trình duyệt của bạn không hỗ trợ thẻ video.
             </video>
 
-
-
             {/* Nội dung dịch xuống phần dưới */}
             <div
                 className="container h-100 d-flex flex-column justify-content-start align-items-center text-white text-center"
                 style={{
                     position: 'relative',
                     zIndex: 2,
-                    paddingTop: '30vh', // 👈 Dịch xuống khoảng 60% chiều cao
+                    paddingTop: '30vh',
                 }}
             >
                 <motion.h1
@@ -37,7 +38,7 @@ const HeroIntro = () => {
                     initial={{ opacity: 0, y: -40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
-                    style={{ fontFamily: 'Quicksand, sans-serif' }}
+                    style={{ color: 'white', fontFamily: 'Quicksand, sans-serif' }}
                 >
                     Chào mừng đến với NekoKin
                 </motion.h1>

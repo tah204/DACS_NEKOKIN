@@ -214,7 +214,7 @@ const Layout = () => {
 
             {/* Cột 2: Liên kết nhanh */}
             <div className="col-12 col-md-4">
-              <h5 className="mb-3 fw-bold" style={{ fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Liên kết nhanh</h5>
+              <h5 className="mb-3 fw-bold" style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Liên kết nhanh</h5>
               <ul className="list-unstyled d-flex flex-column gap-2 align-items-center">
                 <li><Link to="/about" className="text-white text-decoration-none">Giới thiệu</Link></li>
                 <li><Link to="/services" className="text-white text-decoration-none">Dịch vụ</Link></li>
@@ -224,7 +224,7 @@ const Layout = () => {
 
             {/* Cột 3: Mạng xã hội */}
             <div className="col-12 col-md-4">
-              <h5 className="mb-3 fw-bold" style={{ fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Mạng xã hội</h5>
+              <h5 className="mb-3 fw-bold" style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Mạng xã hội</h5>
               <div className="d-flex justify-content-center gap-3">
                 <a
                   href="https://www.facebook.com/neko.kin"

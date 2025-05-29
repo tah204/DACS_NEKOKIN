@@ -1,23 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import BookingModal from '../components/BookingModal'; // Import BookingModal
+import BookingModal from '../components/BookingModal';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
+
 
 const ServiceGroomDetail = () => {
     const { id: categoryId } = useParams();
     const [category, setCategory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [activeDot, setActiveDot] = useState(null);
 
-    // Lấy thông tin danh mục
+    const galleryImages = [
+        "/images/tampet.jpg",
+        "/images/IMG_0326.png",
+        "/images/tamtringua.jpg",
+        "/images/thú-cưng-và-bs.jpg",
+        "/images/DSC00083.jpg",
+        "/images/IMG_8558.jpg",
+        "/images/chailong.jpg",
+        "/images/catmong.jpg",
+        "/images/IMG_1882-scaled.jpg"
+    ];
+    const dots = [
+        { id: 1, label: 'An toàn', description: 'Chúng tôi đã sử dụng kiến thức thú y của mình để thiết kế một phương pháp chải lông không gây sợ hãi cho thú cưng của bạn.' },
+        { id: 2, label: 'Chất lượng cao', description: 'Chúng tôi cam kết sử dụng sản phẩm và kỹ thuật tốt nhất cho thú cưng của bạn.' },
+        { id: 3, label: 'Sạch sẽ & vệ sinh', description: 'Dụng cụ và không gian luôn được khử trùng kỹ lưỡng để đảm bảo sự sạch sẽ.' },
+        { id: 4, label: 'Tay nghề cao', description: 'Đội ngũ nhân viên được đào tạo chuyên sâu với nhiều năm kinh nghiệm.' },
+        { id: 5, label: 'Thoải mái', description: 'Không gian thân thiện giúp thú cưng cảm thấy dễ chịu trong suốt quá trình.' },
+        { id: 6, label: 'Sức khỏe là trên hết', description: 'Mọi dịch vụ đều hướng đến việc tăng cường sức khỏe cho thú cưng của bạn.' },
+    ];
+
     useEffect(() => {
         const fetchCategoryDetails = async () => {
             setLoading(true);
             setError('');
             try {
-                // API để lấy thông tin chi tiết của CategoryService
                 const response = await axios.get(`http://localhost:5000/api/categoryservices/${categoryId}`);
                 setCategory(response.data);
             } catch (err) {
@@ -27,109 +50,155 @@ const ServiceGroomDetail = () => {
                 setLoading(false);
             }
         };
-
-        if (categoryId) {
-            fetchCategoryDetails();
-        }
+        if (categoryId) fetchCategoryDetails();
     }, [categoryId]);
 
-    const openBookingModal = () => {
-        setIsBookingModalOpen(true);
-    };
-
-    const closeBookingModal = () => {
-        setIsBookingModalOpen(false);
-    };
-
-    // Dữ liệu giả lập cho các điểm chú thích (có thể thay bằng API nếu cần)
-    const groomingHighlights = [
-        { id: 1, text: 'An toàn', className: 'position-absolute top-0 start-0 translate-middle text-info' },
-        { id: 2, text: 'Chất lượng cao', className: 'position-absolute top-50 start-0 translate-middle-y text-info' },
-        { id: 3, text: 'Thời gian nhanh', className: 'position-absolute bottom-0 start-0 translate-middle-x translate-middle-y text-info' },
-        { id: 4, text: 'Thoa mịn', className: 'position-absolute top-0 end-0 translate-middle text-info' },
-        { id: 5, text: 'Chăm sóc sâu', className: 'position-absolute top-50 end-0 translate-middle-y text-info' },
-        { id: 6, text: 'Sức khỏe và vệ sinh', className: 'position-absolute bottom-0 end-0 translate-middle-x translate-middle-y text-info' },
-    ];
+    const openBookingModal = () => setIsBookingModalOpen(true);
+    const closeBookingModal = () => setIsBookingModalOpen(false);
 
     if (loading) return <div className="text-center py-5">Đang tải thông tin danh mục...</div>;
     if (error) return <div className="alert alert-danger text-center py-5">{error}</div>;
     if (!category) return <div className="alert alert-info text-center py-5">Không tìm thấy danh mục dịch vụ.</div>;
 
-
     return (
-        <div className="bg-light font-sans" style={{ minHeight: '100vh' }}>
-            {/* Phần mô tả dịch vụ */}
-            <section className="bg-white py-5 text-center">
-                <div className="container">
-                    <h1 className="h2 font-weight-bold text-primary mb-4">{category.name}</h1> {/* Sử dụng tên category động */}
-                    <p className="text-secondary mx-auto mb-4" style={{ maxWidth: '600px' }}>
-                        {category.description} {/* Sử dụng mô tả category động */}
-                    </p>
-                    <div className="position-relative mx-auto" style={{ width: '250px', height: '250px' }}>
-                        <img
-                            src={category.imageUrl || '/images/grooming-dog.jpg'} // Sử dụng imageUrl từ category
-                            alt={category.name}
-                            className="img-fluid rounded-circle shadow-sm w-100 h-100 object-fit-cover"
-                            onError={(e) => (e.target.src = '/images/default_service.jpg')}
-                        />
-                        {groomingHighlights.map((highlight) => (
-                            <div key={highlight.id} className={highlight.className}>
-                                <small className="font-weight-bold">{highlight.text}</small>
+        <>
+            <div style={{ backgroundColor: '#ffff', marginTop: '40px', padding: '30px 0' }}>
+                {/* Intro section */}
+                <section className="after-grooming">
+                    <div className="container">
+                        <h3 className="heading text-center mb-4">Làm đẹp thú cưng</h3>
+                        <div className="description-block-grooming-animation text-center">
+                            <p className="FirstParagraph">
+                                Làm đẹp thú cưng là điều cần thiết để giữ cho thú cưng của bạn trông xinh đẹp tuyệt vời.
+                                Chúng tôi nhẹ nhàng rửa sạch bụi bẩn bám vào cơ thể một cách tự nhiên ở thú cưng,
+                                giúp bộ lông thú cưng của bạn có mùi thơm tươi mát và trông bóng mượt.
+                            </p>
+                            <p className="FirstParagraph">
+                                Và bạn có thể chắc chắn rằng mọi thứ chúng tôi làm đều cải thiện sức khỏe cho thú cưng của bạn
+                                chứ không gây hại cho bé.
+                            </p>
+                            <p className="FirstParagraph">
+                                Đôi bên cùng có lợi, cho bạn và cho thú cưng của bạn.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Dot Image Section */}
+                <section className="image-section">
+                    <div className="container position-relative my-5">
+                        <div className="grooming-content position-relative text-center">
+                            <img
+                                src="https://www.theanimaldoctors.org/wp-content/uploads/2023/04/grooming.png"
+                                alt="Dog"
+                                className="grooming-img img-fluid"
+                                style={{ maxWidth: '90%', height: 'auto' }}
+                            />
+
+                            {dots.map(dot => (
+                                <div
+                                    key={dot.id}
+                                    className={`dot dot-${dot.id} position-absolute text-center`}
+                                    onClick={() => setActiveDot(dot.id === activeDot ? null : dot.id)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    {activeDot === dot.id ? (
+                                        <div className="dot-description-box position-relative">
+                                            <div className="dot-popup-number">{dot.id}</div>
+                                            <h5>{dot.label}</h5>
+                                            <p>{dot.description}</p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="dot-circle">{dot.id}</div>
+                                            <div className="dot-label">{dot.label}</div>
+                                        </>
+                                    )}
+                                </div>
+                            ))}
+
+                            <div className="text-center mt-4">
+                                <button onClick={openBookingModal} className="book-btn">Đặt hẹn</button>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Phần hình ảnh dịch vụ (giữ nguyên hoặc tùy chỉnh theo ý bạn) */}
-            <section className="py-5 bg-light">
-                <div className="container">
-                    <h2 className="h3 font-weight-bold text-center text-primary mb-5">Một số hình ảnh về dịch vụ {category.name}</h2>
-                    <div className="row g-4">
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming1.jpg" alt="Grooming 1" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming2.jpg" alt="Grooming 2" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming3.jpg" alt="Grooming 3" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming4.jpg" alt="Grooming 4" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming5.jpg" alt="Grooming 5" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <img src="/images/grooming6.jpg" alt="Grooming 6" className="img-fluid rounded shadow-sm w-100 h-100 object-fit-cover" style={{ minHeight: '200px' }} onError={(e) => (e.target.src = '/images/default_service.jpg')} />
                         </div>
                     </div>
-                </div>
+                </section>
+            </div>
+
+            {/* Gallery */}
+            <section className="gallery-section px-30" >
+                <h3 className="gallery-section1 text-center mb-4">Chăm sóc cho thú cưng từ đầu đến đuôi</h3>
+                <Slider
+                    dots={true}
+                    arrows={true}
+                    infinite={true}
+                    speed={600}
+                    slidesToShow={1}
+                    slidesToScroll={1}
+                    className="gallery-slider full-width-slider"
+                >
+                    {[
+                        {
+                            top: [
+                                { type: 'landscape', img: galleryImages[0] },
+                                { type: 'portrait', img: galleryImages[1] },
+                                { type: 'portrait', img: galleryImages[2] },
+                                { type: 'portrait', img: galleryImages[8] }
+                            ],
+                            bottom: [
+                                { type: 'portrait', img: galleryImages[3] },
+                                { type: 'landscape', img: galleryImages[4] },
+                                { type: 'portrait', img: galleryImages[5] },
+                                { type: 'landscape', img: galleryImages[7] }
+                            ]
+                        },
+                        {
+                            top: [
+                                { type: 'portrait', img: galleryImages[6] },
+                                { type: 'landscape', img: galleryImages[7] },
+                                { type: 'portrait', img: galleryImages[8] },
+                                { type: 'portrait', img: galleryImages[3] }
+                            ],
+                            bottom: [
+                                { type: 'landscape', img: galleryImages[0] },
+                                { type: 'portrait', img: galleryImages[1] },
+                                { type: 'portrait', img: galleryImages[2] },
+                                { type: 'landscape', img: galleryImages[4] }
+                            ]
+                        }
+                    ].map((slide, index) => (
+                        <div key={index}>
+                            <div className="gallery-row d-flex justify-content-center gap-3 mb-3">
+                                {slide.top.map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`gallery-img-wrapper ${item.type}`}
+                                        style={{ backgroundImage: `url(${item.img})` }}
+                                    />
+                                ))}
+                            </div>
+                            <div className="gallery-row d-flex justify-content-center gap-3">
+                                {slide.bottom.map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`gallery-img-wrapper ${item.type}`}
+                                        style={{ backgroundImage: `url(${item.img})` }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </Slider>
             </section>
 
-            {/* PHẦN DANH SÁCH DỊCH VỤ CHI TIẾT VÀ PHÂN TRANG BỊ XÓA BỎ */}
-
-            {/* Phần "Đừng chần chừ nữa!" với nút đặt lịch duy nhất */}
-            <section className="py-5 bg-white text-center">
-                <div className="container">
-                    <h2 className="h3 font-weight-bold text-primary mb-4">Sẵn sàng để thú cưng của bạn được chăm sóc tốt nhất?</h2>
-                    <p className="text-secondary mx-auto mb-4" style={{ maxWidth: '600px' }}>
-                        Hãy đặt lịch hẹn ngay hôm nay để trải nghiệm dịch vụ {category.name} chuyên nghiệp của chúng tôi!
-                    </p>
-                    <button className="btn btn-danger btn-lg rounded-pill px-5 py-3" onClick={openBookingModal}>
-                        Đặt Lịch Ngay
-                    </button>
-                </div>
-            </section>
 
             {/* Booking Modal */}
             <BookingModal
                 isOpen={isBookingModalOpen}
                 onClose={closeBookingModal}
-                initialCategoryId={categoryId} // Truyền categoryId vào modal
+                initialCategoryId={categoryId}
             />
-        </div>
+        </>
     );
 };
 

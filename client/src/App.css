@@ -258,3 +258,657 @@ body,
   flex-wrap: wrap;
   justify-content: flex-end;
 }
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-body p {
+  font-size: 0.95rem;
+}
+
+.services-section {
+  background-color: #f8f9fa;
+  padding-top: 120px;
+}
+
+.service-card-img-wrapper {
+  height: 250px;
+  overflow: hidden;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.service-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+.service-card:hover .service-img {
+  transform: scale(1.1);
+}
+
+
+
+
+
+.service-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover .service-img {
+  transform: scale(1.05);
+}
+
+.service-img-wrapper {
+  height: 240px;
+  overflow: hidden;
+}
+
+.service-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+.service-card-body {
+  background-color: #0d2554;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Service Introduction Section */
+.service-intro-outer {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: #FAF7F1;
+  z-index: 3;
+  margin-top: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border-radius: 0 0 48px 48px;
+  overflow: hidden;
+  padding-top: 0;
+}
+
+.service-intro-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 0 56px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-intro-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 3rem;
+  color: #0d2554;
+  margin-bottom: 2.5rem;
+  font-family: 'Quicksand', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.service-intro-content {
+  display: flex;
+  flex-direction: row;
+  gap: 3.5rem;
+  width: 100%;
+  max-width: 1100px;
+  justify-content: center;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.service-intro-col {
+  flex: 1;
+  font-size: 1.28rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+@media (max-width: 900px) {
+  .service-intro-content {
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 100%;
+  }
+}
+
+/* ServiceGroomDetail */
+.grooming-content {
+  position: relative;
+  width: fit-content;
+  margin: 40px auto;
+}
+
+.grooming-img {
+  max-width: 55%;
+  height: auto;
+}
+
+.dot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #0d2554;
+}
+
+.dot-circle {
+  background-color: #8b0000;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+}
+
+.dot-1 {
+  top: 5%;
+  left: -55px;
+}
+
+.dot-2 {
+  top: 40%;
+  left: -95px;
+}
+
+.dot-3 {
+  bottom: 20%;
+  left: -90px;
+}
+
+.dot-4 {
+  top: 3%;
+  right: -75px;
+}
+
+.dot-5 {
+  top: 40%;
+  right: -50px;
+}
+
+.dot-6 {
+  bottom: 20%;
+  right: -142px;
+}
+
+.center-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.book-btn {
+  background-color: #8b0000;
+  color: white;
+  padding: 9px 70px;
+  /* tăng chiều ngang */
+  border: none;
+  font-weight: normal;
+  /* bỏ in đậm */
+  cursor: pointer;
+  border-radius: 6px;
+  /* bo nhẹ góc */
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.after-grooming {
+  padding: 40px 20px;
+  background-color: #fff;
+  text-align: center;
+  background-color: #FAF7F1;
+}
+
+.heading {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #0d2554;
+}
+
+.description-block-grooming-animation {
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.FirstParagraph {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #333;
+  max-width: 950px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.image-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -70px;
+  background-color: #FAF7F1;
+}
+
+/* dot-box */
+.dot-description-box {
+  background-color: #0d2554;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 10px;
+  max-width: 240px;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.25s ease-in-out;
+  position: relative;
+}
+
+.dot-description-box h5 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.dot-popup-number {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #fff;
+  color: #0d2554;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* {Gallery} */
+.gallery-section1 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  color: #0d2554;
+  font-size: 2.5rem;
+  text-align: center;
+  /* margin-bottom: 2rem; */
+  /* margin-top: 30px; */
+}
+
+.gallery-section {
+  padding-bottom: 70px;
+  background-color: #ffffff;
+
+}
+
+
+.gallery-image-wrapper {
+  width: 48%;
+  padding-top: 60%;
+  /* tạo tỷ lệ ảnh hình chữ nhật ngang */
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.gallery-image-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.gallery-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.gallery-slider {
+  width: 100vw;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.gallery-img-wrapper {
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  height: 260px;
+}
+
+.gallery-img-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-img-wrapper.landscape {
+  flex: 2;
+  min-width: 0;
+}
+
+.gallery-img-wrapper.portrait {
+  flex: 1;
+  min-width: 0;
+}
+
+.gallery-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 0 20px;
+}
+
+
+.slick-prev,
+.slick-next {
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(13, 37, 84, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(205, 11, 11);
+  top: 45%;
+  /* Đặt giữa chiều cao ảnh */
+  transform: translateY(-50%);
+}
+
+.slick-prev {
+  left: 10px;
+}
+
+.slick-next {
+  right: 10px;
+}
+
+.slick-prev::before,
+.slick-next::before {
+  font-size: 20px;
+  color: rgb(38, 2, 138);
+  opacity: 1;
+}
+
+
+/* Biểu tượng mũi tên */
+.slick-prev::before,
+.slick-next::before {
+  font-size: 20px;
+  color: rgb(38, 2, 138);
+}
+
+.gallery-slider {
+  position: relative;
+}
+
+
+.slick-prev {
+  left: 10px;
+}
+
+.slick-next {
+  right: 10px;
+}
+
+
+.gallery-slider {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+  position: relative;
+  overflow: visible;
+}
+
+
+
+.slick-slider,
+.slick-list {
+  overflow: visible;
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Ngăn cuộn ngang toàn trang */
+}
+
+.gallery-row+.gallery-row {
+  margin-top: 10px;
+  /* hoặc 5px, hoặc 0 nếu muốn sát hẳn */
+}
+
+/* hotel-cat */
+/* App.css */
+
+/* Font và reset cơ bản */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #FAF7F1;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+/* Tiêu đề chính */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 700;
+  color: #0d2554;
+}
+
+/* Phần mô tả */
+.text-secondary {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* Button đặt phòng */
+.btn-danger {
+  background-color: #8B0000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #8B0000;
+  transform: scale(1.05);
+}
+
+/* Ảnh tròn trung tâm */
+.img-fluid.rounded-circle {
+  object-fit: cover;
+  border: 6px solid #0d2554;
+}
+
+/* Highlight text xung quanh ảnh tròn */
+.position-absolute small {
+  background-color: #FAF7F1;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hình ảnh dịch vụ */
+.img-fluid.rounded.shadow-sm {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.img-fluid.rounded.shadow-sm:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal booking overlay nếu cần */
+.react-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.react-modal-content {
+  background: #FAF7F1;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: auto;
+  position: relative;
+}
+
+/* Responsive tối ưu */
+@media (max-width: 768px) {
+  .text-secondary {
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}
+
+.heading {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #0d2554;
+  text-align: center;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.after-header {
+  padding: 20px 40px;
+  text-align: center;
+  background-color: #FAF7F1;
+}
+
+.testimonial-section {
+  background-color: #ffffff;
+  padding: 80px 20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.testimonial-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0d2554;
+  margin-bottom: 10px;
+}
+
+.testimonial-subtitle {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.testimonial-content {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+
+
+}
+
+.testimonial-img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 25px;
+  /* 👉 Bo góc ảnh */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-bottom: 30px;
+  transition: transform 0.3s ease;
+}
+
+.testimonial-img:hover {
+  transform: scale(1.03);
+}
+
+.testimonial-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.testimonial-name {
+  font-weight: 600;
+  color: #111;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .testimonial-title {
+    font-size: 26px;
+  }
+
+  .testimonial-subtitle {
+    font-size: 16px;
+  }
+
+  .testimonial-text {
+    font-size: 15px;
+  }
+
+  .testimonial-img {
+    max-width: 90%;
+  }
+}
