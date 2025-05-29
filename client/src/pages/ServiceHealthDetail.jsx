@@ -102,8 +102,8 @@ const ServiceClinicalDetail = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ staggerChildren: 0.3 }}
             >
-                <div className="service-intro-inner">
-                    <h2 className="service-intro-title">Tất cả đều dành cho thú cưng của bạn</h2>
+                <div className="service-intro-inner" >
+                    <h2 className="service-intro-title" >Tất cả đều dành cho thú cưng của bạn</h2>
                     <div className="service-intro-content">
                         <motion.div
                             className="service-intro-col"
@@ -163,6 +163,7 @@ const ServiceClinicalDetail = () => {
                                 fontSize: '2.8rem',
                                 lineHeight: 1.15,
                                 paddingBottom: '2rem',
+                                fontFamily: 'Quicksand, sans-serif',
                             }}
                         >
                             Các dịch vụ được xây dựng dựa trên nhu cầu của thú cưng
@@ -197,6 +198,7 @@ const ServiceClinicalDetail = () => {
                                                 flexDirection: 'column',
                                                 alignItems: 'center',
                                                 background: 'rgba(0,32,96,0.04)',
+                                                color: 'white',
                                             }}
                                         >
                                             <motion.div
@@ -218,7 +220,7 @@ const ServiceClinicalDetail = () => {
                                                 onClick={(e) => e.stopPropagation()}
                                             >
                                                 <div className="d-flex justify-content-between align-items-start mb-2" style={{ width: '100%' }}>
-                                                    <h4 className="fw-bold mb-0">{clinicalServices[activeIndex].title}</h4>
+                                                    <h4 className="fw-bold mb-0" style={{ color: 'white' }}>{clinicalServices[activeIndex].title}</h4>
                                                     <button
                                                         className="btn btn-sm btn-light ms-2"
                                                         style={{

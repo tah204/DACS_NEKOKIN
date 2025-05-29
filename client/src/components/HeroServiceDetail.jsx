@@ -14,6 +14,7 @@ const HeroServiceDetail = () => {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
+
             }}
         >
             <div
@@ -26,7 +27,7 @@ const HeroServiceDetail = () => {
             >
                 <motion.h1
                     className="fw-bold mb-4"
-                    style={{ fontFamily: 'Quicksand, sans-serif', fontSize: '3.5rem' }}
+                    style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', fontSize: '3.5rem' }}
                     initial={{ opacity: 0, y: -40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
@@ -35,7 +36,7 @@ const HeroServiceDetail = () => {
                 </motion.h1>
                 <motion.p
                     className="fs-4 text-center"
-                    style={{ maxWidth: '800px', margin: '0 auto' }}
+                    style={{ fontFamily: 'Quicksand, sans-serif', maxWidth: '800px', margin: '0 auto' }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
