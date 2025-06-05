@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -119,9 +120,7 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setPets(response.data);
-            if (response.data.length === 0) {
-                setError('Bạn chưa có thú cưng nào. Vui lòng thêm thú cưng trước khi đặt lịch.');
-            }
+            // Bỏ thông báo lỗi ở đây, để thông báo trong bước 1 xử lý
         } catch (err) {
             setError(err.response?.data?.message || 'Không thể tải danh sách thú cưng. Vui lòng đăng nhập.');
             console.error('Error fetching pets:', err);
@@ -219,12 +218,12 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                 setError('Vui lòng chọn một dịch vụ cụ thể.');
                 return;
             }
-            if (!formData.petId) {
-                setError('Vui lòng chọn thú cưng.');
-                return;
-            }
             if (pets.length === 0) {
                 setError('Bạn chưa có thú cưng nào. Vui lòng thêm thú cưng để đặt lịch.');
+                return;
+            }
+            if (!formData.petId) {
+                setError('Vui lòng chọn thú cưng.');
                 return;
             }
             setStep(2);
@@ -401,7 +400,7 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                                 onClick={() => handleSelectService(service._id)}
                                                 style={{ cursor: 'pointer', maxWidth: '220px', minWidth: '180px' }}
                                             >
-                                                <img src={service.image} alt={service.name} className="card-img-top mb-2" style={{ height: '100px', objectFit: 'cover' }} />
+                                                <img src={`http://localhost:5000/api/images/${service.image}`} alt={service.name} className="card-img-top mb-2" style={{ height: '100px', objectFit: 'cover' }} />
                                                 <h5 className="card-title text-primary text-center">{service.name}</h5>
                                                 <p className="card-text text-muted small text-center flex-grow-1">{service.description.substring(0, 50)}{service.description.length > 50 ? '...' : ''}</p>
                                                 <div className="text-center">
@@ -415,6 +414,15 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                 )}
                             </div>
 
+                            {pets.length === 0 && (
+                                <div className="alert alert-warning mb-4 d-flex justify-content-between align-items-center">
+                                    <span>Bạn chưa có thú cưng nào. Vui lòng thêm thú cưng để đặt lịch.</span>
+                                    <Link to="/mypets" className="btn btn-primary btn-sm ms-3">
+                                        Thêm Thú Cưng
+                                    </Link>
+                                </div>
+                            )}
+
                             <div className="mb-3">
                                 <label htmlFor="petId" className="form-label">Chọn thú cưng của bạn</label>
                                 <select
@@ -424,17 +432,14 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                     onChange={handleChange}
                                     className="form-select"
                                     required
+                                    disabled={pets.length === 0}
                                 >
                                     <option value="">-- Chọn thú cưng của bạn --</option>
-                                    {pets.length > 0 ? (
-                                        pets.map((pet) => (
-                                            <option key={pet._id} value={pet._id}>
-                                                {pet.name} ({pet.type})
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option value="" disabled>Bạn chưa có thú cưng nào. Vui lòng thêm thú cưng.</option>
-                                    )}
+                                    {pets.map((pet) => (
+                                        <option key={pet._id} value={pet._id}>
+                                            {pet.name} ({pet.type})
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="d-flex justify-content-end">
@@ -503,7 +508,7 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                 <>
                                     <div className="d-flex flex-column flex-lg-row gap-4 justify-content-center align-items-start">
                                         <div className="mb-3 flex-grow-1 datepicker-container">
-                                            <label htmlFor="bookingDate" className="form-label">Ngày đặt lịch</label>
+                                            <label htmlFor="bookingDate" className="form-label">Ngày đặt hẹn</label>
                                             <DatePicker
                                                 selected={formData.bookingDate}
                                                 onChange={(date) => handleDateChange(date, 'bookingDate')}
@@ -522,7 +527,7 @@ const BookingModal = ({ isOpen, onClose, initialCategoryId }) => {
                                                     selectedDate={formData.bookingDate}
                                                     selectedTime={formData.bookingTime}
                                                     onSelectTime={handleTimeSelect}
-                                                    serviceId={formData.serviceId} // Thêm serviceId
+                                                    serviceId={formData.serviceId}
                                                 />
                                             ) : (
                                                 <div className="alert alert-info text-center py-4">Vui lòng chọn ngày để xem giờ khả dụng.</div>

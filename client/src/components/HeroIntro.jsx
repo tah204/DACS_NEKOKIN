@@ -50,7 +50,7 @@ const HeroIntro = () => {
                     transition={{ delay: 0.5 }}
                     style={{ maxWidth: '700px' }}
                 >
-                    NekoKin là nơi bạn tìm thấy mọi điều tốt nhất cho thú cưng của mình – từ sản phẩm, dịch vụ, đến kiến thức và tư vấn chuyên sâu.
+                    NekoKin là nơi bạn tìm thấy mọi điều tốt nhất cho thú cưng của mình – từ dịch vụ, đến kiến thức và tư vấn chuyên sâu.
                 </motion.p>
 
                 <motion.button

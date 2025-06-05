@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaBox, FaConciergeBell, FaNewspaper, FaUsers, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import { FaTachometerAlt, FaBox, FaConciergeBell, FaNewspaper, FaUsers, FaSignOutAlt, FaHome, FaCalendarAlt } from 'react-icons/fa';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const AdminLayout = () => {
     <div className="d-flex min-vh-100">
       {/* Sidebar */}
       <div className="bg-dark text-white p-3" style={{ width: '250px', position: 'fixed', height: '100vh' }}>
-        <h4 className="text-center mb-4">Admin Panel</h4>
+        <h4 className="text-center mb-4"><strong style={{ color: 'white'}}>Admin Panel</strong></h4>
         <ul className="nav flex-column">
           <li className="nav-item mb-2">
             <Link to="/admin/dashboard" className="nav-link text-white">
@@ -24,18 +24,13 @@ const AdminLayout = () => {
             </Link>
           </li>
           <li className="nav-item mb-2">
-            <Link to="/admin/products" className="nav-link text-white">
-              <FaBox className="me-2" /> Quản Lý Khóa Học
+            <Link to="/admin/categoryservice" className="nav-link text-white">
+              <FaBox className="me-2" /> Quản Lý Danh Mục Dịch Vụ
             </Link>
           </li>
           <li className="nav-item mb-2">
             <Link to="/admin/services" className="nav-link text-white">
-              <FaConciergeBell className="me-2" /> Quản Lý Sở Thích
-            </Link>
-          </li>
-          <li className="nav-item mb-2">
-            <Link to="/admin/services" className="nav-link text-white">
-              <FaConciergeBell className="me-2" /> Quản Lý Chuyên Ngành
+              <FaConciergeBell className="me-2" /> Quản Lý Dịch Vụ
             </Link>
           </li>
           <li className="nav-item mb-2">
@@ -44,8 +39,13 @@ const AdminLayout = () => {
             </Link>
           </li>
           <li className="nav-item mb-2">
-            <Link to="/admin/users" className="nav-link text-white">
-              <FaUsers className="me-2" /> Quản Lý Tài Khoản
+            <Link to="/admin/customers" className="nav-link text-white">
+              <FaUsers className="me-2" /> Quản Lý Khách Hàng
+            </Link>
+          </li>
+          <li className="nav-item mb-2">
+            <Link to="/admin/bookings" className="nav-link text-white">
+              <FaCalendarAlt className="me-2" /> Quản Lý Đơn Đặt Dịch Vụ
             </Link>
           </li>
           <li className="nav-item mb-2">

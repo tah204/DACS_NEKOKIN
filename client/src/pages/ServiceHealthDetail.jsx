@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import HeroServiceDetail from '../components/HeroServiceDetail';
 import BookingModal from '../components/BookingModal';
 import { motion } from 'framer-motion';
-
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import axios from 'axios';
 
 const clinicalServices = [
     {
@@ -14,53 +17,56 @@ const clinicalServices = [
         content: 'Khám sức khỏe tổng quát giúp phát hiện sớm các vấn đề sức khỏe tiềm ẩn, đảm bảo thú cưng của bạn luôn khỏe mạnh và phát triển tốt.'
     },
     {
-        title: 'Tiêm phòng 5 bệnh',
-        content: 'Chúng tôi cung cấp dịch vụ tiêm phòng cho 5 bệnh nguy hiểm, đảm bảo sức khỏe cho thú cưng của bạn. Đội ngũ bác sĩ chuyên nghiệp và giàu kinh nghiệm của chúng tôi sẽ chăm sóc tận tình để thú cưng của bạn luôn khỏe mạnh và an toàn.'
+        title: 'Tiêm phòng',
+        content: 'Chúng tôi cung cấp dịch vụ tiêm phòng cho bệnh nguy hiểm, đảm bảo sức khỏe cho thú cưng của bạn. Đội ngũ bác sĩ chuyên nghiệp và giàu kinh nghiệm của chúng tôi sẽ chăm sóc tận tình để thú cưng của bạn luôn khỏe mạnh và an toàn.'
     },
     {
         title: 'Da liễu',
         content: 'Dịch vụ da liễu giúp chẩn đoán và điều trị các bệnh về da, dị ứng, ký sinh trùng ngoài da cho thú cưng.'
     },
     {
-        title: 'Tim mạch',
-        content: 'Kiểm tra và điều trị các vấn đề về tim mạch cho thú cưng với trang thiết bị hiện đại.'
-    },
-    {
         title: 'Phục hồi chức năng',
         content: 'Dịch vụ phục hồi chức năng giúp thú cưng hồi phục sau phẫu thuật, chấn thương hoặc các vấn đề vận động.'
-    },
-    {
-        title: 'Cấp cứu',
-        content: 'Dịch vụ cấp cứu 24/7, sẵn sàng hỗ trợ thú cưng của bạn trong mọi tình huống khẩn cấp.'
     },
     {
         title: 'Siêu âm',
         content: 'Chẩn đoán hình ảnh bằng siêu âm giúp phát hiện các vấn đề nội tạng, thai kỳ và nhiều bệnh lý khác.'
     },
-    {
-        title: 'Nội soi',
-        content: 'Dịch vụ nội soi giúp kiểm tra và chẩn đoán các vấn đề bên trong cơ thể thú cưng mà không cần phẫu thuật.'
-    },
-
-    {
-        title: 'Nội tiết',
-        content: 'Chẩn đoán và điều trị các bệnh lý nội tiết như tiểu đường, cường giáp, suy giáp...'
-    },
-    {
-        title: 'Hóa trị',
-        content: 'Dịch vụ hóa trị hỗ trợ điều trị các bệnh ung thư cho thú cưng.'
-    },
-    {
-        title: 'Châm cứu',
-        content: 'Liệu pháp châm cứu hỗ trợ điều trị đau mãn tính, phục hồi chức năng và cải thiện chất lượng sống cho thú cưng.'
-    },
 ];
 
-const ServiceClinicalDetail = () => {
-    const [activeIndex, setActiveIndex] = useState(null);
-    const [showBookingModal, setShowBookingModal] = useState(false);
+const ServiceHealthDetail = () => {
+    const { id: categoryId } = useParams();
+    const [category, setCategory] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(null); // Đảm bảo khởi tạo là null để không tự mở popup
     const buttonRefs = useRef([]);
 
+    useEffect(() => {
+        AOS.init({ duration: 1000, once: true });
+    }, []);
+
+    useEffect(() => {
+        const fetchCategoryDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/categoryservices/${categoryId}`);
+                setCategory(response.data);
+            } catch (err) {
+                console.error('Error fetching category:', err);
+                setError('Không thể tải thông tin danh mục dịch vụ.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (categoryId) {
+            fetchCategoryDetails();
+        }
+    }, [categoryId]);
+
+    const openBookingModal = () => setIsBookingModalOpen(true);
+    const closeBookingModal = () => setIsBookingModalOpen(false);
 
     // Chia thành 3 cột gần bằng nhau
     const columns = [[], [], []];
@@ -102,8 +108,8 @@ const ServiceClinicalDetail = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ staggerChildren: 0.3 }}
             >
-                <div className="service-intro-inner" >
-                    <h2 className="service-intro-title" >Tất cả đều dành cho thú cưng của bạn</h2>
+                <div className="service-intro-inner">
+                    <h2 className="service-intro-title">Tất cả đều dành cho thú cưng của bạn</h2>
                     <div className="service-intro-content">
                         <motion.div
                             className="service-intro-col"
@@ -138,7 +144,6 @@ const ServiceClinicalDetail = () => {
                     right: '50%',
                     marginLeft: '-50vw',
                     marginRight: '-50vw',
-                    minHeight: '1vh',
                     background: 'transparent',
                     zIndex: 2,
                 }}
@@ -146,13 +151,13 @@ const ServiceClinicalDetail = () => {
                 <div
                     className="py-5 position-relative"
                     style={{
-                        minHeight: 500,
                         background: '#fff',
                         borderRadius: '32px 32px 0 0',
                         boxShadow: '0 4px 32px rgba(0,0,0,0.07)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        padding: '3rem 0',
                     }}
                 >
                     <div style={{ width: '100%', maxWidth: 1200, padding: '0 24px', margin: '0 auto' }}>
@@ -294,6 +299,13 @@ const ServiceClinicalDetail = () => {
                             ))}
                         </div>
 
+                        {/* Nút Đặt Hẹn */}
+                        <div className="text-center mt-3" data-aos="zoom-in">
+                            <button className="book-btn btn-danger btn-lg rounded-pill" onClick={openBookingModal}>
+                                Đặt hẹn Ngay
+                            </button>
+                        </div>
+
                         {/* Overlay toàn màn hình */}
                         {activeIndex !== null && (
                             <div
@@ -309,35 +321,17 @@ const ServiceClinicalDetail = () => {
                                 onClick={() => setActiveIndex(null)}
                             />
                         )}
-
-                        {/* Nút Đặt Hẹn */}
-                        <div className="text-center" style={{ marginTop: '-8px' }}>
-                            <motion.button
-                                className="btn"
-                                style={{
-                                    background: '#8B0000',
-                                    color: 'white',
-                                    borderRadius: '12px',
-                                    padding: '0.75rem 2.5rem',
-                                    fontSize: '1rem',
-                                    fontWeight: 400,
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-                                }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setShowBookingModal(true)}
-                            >
-                                Đặt Hẹn
-                            </motion.button>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Modal đặt hẹn */}
-            {showBookingModal && <BookingModal onClose={() => setShowBookingModal(false)} />}
+            <BookingModal
+                isOpen={isBookingModalOpen}
+                onClose={closeBookingModal}
+                initialCategoryId={categoryId}
+            />
         </>
     );
 };
 
-export default ServiceClinicalDetail;
+export default ServiceHealthDetail;

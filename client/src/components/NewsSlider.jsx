@@ -27,7 +27,7 @@ const NewsSlider = ({ featuredNews }) => {
                         <div key={item._id} className="news-slider-card">
                             <Link to={`/news/${item._id}`} className="text-decoration-none text-dark">
                                 <img
-                                    src={`/images/${item.image}`}
+                                    src={`http://localhost:5000/api/images/${item.image}`}
                                     alt={item.title}
                                     className="img-fluid rounded mb-3"
                                     onError={(e) => (e.target.src = '/images/default_news.jpg')}

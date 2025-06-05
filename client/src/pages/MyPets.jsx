@@ -70,8 +70,20 @@ const MyPets = () => {
     }
   };
 
+  // Hàm chuyển đổi ageRange thành định dạng dễ đọc
+  const formatAgeRange = (ageRange) => {
+    const ageMap = {
+      under_2_months: 'Dưới 2 tháng tuổi',
+      '2_to_6_months': '2-6 tháng tuổi',
+      '6_to_12_months': '6-12 tháng tuổi',
+      '1_to_7_years': '1-7 năm tuổi',
+      over_7_years: 'Trên 7 năm tuổi'
+    };
+    return ageMap[ageRange] || ageRange;
+  };
+
   return (
-    <div className="container mt-5" style={{ minHeight: '80vh' }}>
+    <div className="container mt-5" style={{ paddingTop: '30px' }}>
       <h2 className="mb-4 text-center" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold' }}>
         Thú cưng của tôi
       </h2>
@@ -141,11 +153,11 @@ const MyPets = () => {
                     onChange={handleChange}
                     style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                   >
-                    <option value="under_2_months">Dưới 2 tháng</option>
-                    <option value="2_to_6_months">2-6 tháng</option>
-                    <option value="6_to_12_months">6-12 tháng</option>
-                    <option value="1_to_7_years">1-7 năm</option>
-                    <option value="over_7_years">Trên 7 năm</option>
+                    <option value="under_2_months">Dưới 2 tháng tuổi</option>
+                    <option value="2_to_6_months">2-6 tháng tuổi</option>
+                    <option value="6_to_12_months">6-12 tháng tuổi</option>
+                    <option value="1_to_7_years">1-7 năm tuổi</option>
+                    <option value="over_7_years">Trên 7 năm tuổi</option>
                   </select>
                 </div>
                 <div className="d-flex justify-content-center">
@@ -226,11 +238,11 @@ const MyPets = () => {
                         onChange={handleChange}
                         style={{ borderRadius: '8px', border: '1px solid #ced4da', fontFamily: 'Quicksand, sans-serif' }}
                       >
-                        <option value="under_2_months">Dưới 2 tháng</option>
-                        <option value="2_to_6_months">2-6 tháng</option>
-                        <option value="6_to_12_months">6-12 tháng</option>
-                        <option value="1_to_7_years">1-7 năm</option>
-                        <option value="over_7_years">Trên 7 năm</option>
+                        <option value="under_2_months">Dưới 2 tháng tuổi</option>
+                        <option value="2_to_6_months">2-6 tháng tuổi</option>
+                        <option value="6_to_12_months">6-12 tháng tuổi</option>
+                        <option value="1_to_7_years">1-7 năm tuổi</option>
+                        <option value="over_7_years">Trên 7 năm tuổi</option>
                       </select>
                     </div>
                     <div className="d-flex justify-content-center gap-3">
@@ -277,7 +289,7 @@ const MyPets = () => {
                       Loại: {pet.type === 'cat' ? 'Mèo' : pet.type === 'dog' ? 'Chó' : 'Khác'}
                     </p>
                     <p style={{ fontFamily: 'Quicksand, sans-serif', margin: 0 }}>
-                      Khoảng tuổi: {pet.ageRange.replace('_', ' ').replace('to', '-')}
+                      Khoảng tuổi: {formatAgeRange(pet.ageRange)}
                     </p>
                     <div className="d-flex justify-content-center gap-3 mt-3">
                       <button

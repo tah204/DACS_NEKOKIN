@@ -11,7 +11,7 @@ const Login = () => {
   useEffect(() => {
     let timer;
     if (showMessage) {
-      timer = setTimeout(() => setShowMessage(false), 2000);
+      timer = setTimeout(() => setShowMessage(false), 1000);
     }
     return () => clearTimeout(timer);
   }, [showMessage]);
@@ -57,7 +57,6 @@ const Login = () => {
         {showMessage && (
           <div className={`alert ${message.includes('thành công') ? 'alert-success' : 'alert-danger'}`}>
             {message}
-            <button type="button" className="btn-close" onClick={() => setShowMessage(false)} />
           </div>
         )}
         <form onSubmit={handleSubmit}>

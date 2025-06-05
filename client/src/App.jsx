@@ -7,6 +7,10 @@ import ProductManagement from './components/admin/ProductManagement';
 import ServiceManagement from './components/admin/ServiceManagement';
 import NewsManagement from './components/admin/NewsManagement';
 import UserManagement from './components/admin/UserManagement';
+import CategoryServiceManagement from './components//admin/CategoryServiceManagement';
+import CustomerManagement from './components/admin/CustomerManagement';
+import BookingManagement from './components/admin/BookingManagement';
+import CustomerDetail from './components/admin/CustomerDetail';
 import Home from './pages/Home';
 import About from './pages/About';
 import Product from './pages/Products';
@@ -27,7 +31,7 @@ import ServiceHotelDetail from './pages/ServiceHotelDetail';
 
 // Component trung gian để chọn đúng trang chi tiết dựa trên category ID
 const CategoryServiceDetail = () => {
-  const { id } = useParams(); // Lấy categoryId từ URL
+  const { id } = useParams(); 
   const categoryId = parseInt(id, 10);
 
   // Chọn component dựa trên categoryId
@@ -39,7 +43,7 @@ const CategoryServiceDetail = () => {
     case 3:
       return <ServiceHotelDetail />;
     default:
-      return <Navigate to="/services" replace />; // Nếu không tìm thấy danh mục, chuyển hướng về trang Services
+      return <Navigate to="/services" replace />; 
   }
 };
 
@@ -87,7 +91,7 @@ function App() {
             }
           />
           <Route
-            path="booking-history"
+            path="bookinghistory"
             element={
               <ProtectedRoute allowedRoles={['user']}>
                 <BookingHistory />
@@ -108,9 +112,13 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<ProductManagement />} />
+          <Route path="categoryservice" element={<CategoryServiceManagement />} />
           <Route path="services" element={<ServiceManagement />} />
           <Route path="news" element={<NewsManagement />} />
           <Route path="users" element={<UserManagement />} />
+          <Route path="customers" element={<CustomerManagement />} />
+          <Route path="customers/:id" element={<CustomerDetail />} />
+          <Route path="bookings" element={<BookingManagement />} />
         </Route>
 
         {/* Routes cho đăng nhập và đăng ký */}

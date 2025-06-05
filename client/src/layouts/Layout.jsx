@@ -50,7 +50,7 @@ const Layout = () => {
             <ul className="navbar-nav mx-auto">
               <li className="nav-item"><Link className="nav-link fw-semibold" to="/home">Trang chủ</Link></li>
               <li className="nav-item"><Link className="nav-link fw-semibold" to="/about">Giới thiệu</Link></li>
-              <li className="nav-item"><Link className="nav-link fw-semibold" to="/products">Sản phẩm</Link></li>
+              {/* <li className="nav-item"><Link className="nav-link fw-semibold" to="/products">Sản phẩm</Link></li> */}
               <li className="nav-item"><Link className="nav-link fw-semibold" to="/services">Dịch vụ</Link></li>
               <li className="nav-item"><Link className="nav-link fw-semibold" to="/news">Tin tức</Link></li>
             </ul>
@@ -204,36 +204,45 @@ const Layout = () => {
       {/* FOOTER */}
       <footer className="text-white py-5 mt-auto" style={{ backgroundColor: '#0d2554' }}>
         <div className="container">
-          <div className="row gy-4 text-center">
+          <div className="row gy-4 gx-2"> {/* Bỏ text-center khỏi row chính */}
             {/* Cột 1: Giới thiệu */}
-            <div className="col-12 col-md-4">
-              <p className="text-white-50 mx-auto" style={{ lineHeight: '1.8', fontSize: '15px', maxWidth: '300px' }}>
-                <strong>NekoKin</strong> là cộng đồng cung cấp sản phẩm và dịch vụ chăm sóc thú cưng tốt nhất – nơi bạn có thể tin tưởng hoàn toàn cho bé cưng của mình.
+            <div className="col-12 col-md-4 text-start"> {/* Thêm text-start để căn trái */}
+              <p style={{ fontFamily: 'Quicksand, sans-serif', lineHeight: '1.8', fontSize: '15px', color: 'rgba(255, 255, 255, 0.7)' }}> {/* Giảm độ đậm của text-white-50 thành rgba */}
+                <strong style={{ color: 'white', fontSize: '30px' }}>NekoKin </strong> là cộng đồng cung cấp sản phẩm và dịch vụ chăm sóc thú cưng tốt nhất – nơi bạn có thể tin tưởng hoàn toàn cho bé cưng của mình.
               </p>
+              <div className="mt-3">
+                <p className="mb-0" style={{ fontFamily: 'Quicksand, sans-serif', fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}> {/* Giảm độ đậm của text-white-50 thành rgba */}
+                  <strong style={{ color: 'white' }}>Hotline:</strong> 0923 456 897
+                </p>
+                <p className="mb-1" style={{ fontFamily: 'Quicksand, sans-serif', fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}> {/* Giảm độ đậm của text-white-50 thành rgba */}
+                  <strong style={{ color: 'white' }}>Địa chỉ:</strong> 272 Đường Điện Biên Phủ, Quận 2, TP.HCM
+                </p>
+              </div>
             </div>
 
             {/* Cột 2: Liên kết nhanh */}
-            <div className="col-12 col-md-4">
-              <h5 className="mb-3 fw-bold" style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Liên kết nhanh</h5>
-              <ul className="list-unstyled d-flex flex-column gap-2 align-items-center">
-                <li><Link to="/about" className="text-white text-decoration-none">Giới thiệu</Link></li>
-                <li><Link to="/services" className="text-white text-decoration-none">Dịch vụ</Link></li>
-                <li><Link to="/consulting" className="text-white text-decoration-none">Tư vấn</Link></li>
+            <div className="col-12 col-md-4 text-center"> {/* Thêm text-start để căn trái */}
+              <h5 className="mb-3 fw-bold" style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Danh Mục</h5>
+              <ul className="list-unstyled d-flex flex-column gap-2"> {/* Bỏ align-items-center */}
+                <li><Link to="/home" className="text-white text-decoration-none" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#8B0000'} onMouseLeave={(e) => e.currentTarget.style.color = 'white'}>Trang chủ</Link></li>
+                <li><Link to="/about" className="text-white text-decoration-none" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#8B0000'} onMouseLeave={(e) => e.currentTarget.style.color = 'white'}>Giới thiệu</Link></li>
+                <li><Link to="/services" className="text-white text-decoration-none" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#8B0000'} onMouseLeave={(e) => e.currentTarget.style.color = 'white'}>Dịch vụ</Link></li>
+                <li><Link to="/news" className="text-white text-decoration-none" style={{ transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#8B0000'} onMouseLeave={(e) => e.currentTarget.style.color = 'white'}>Tin tức</Link></li>
               </ul>
             </div>
 
             {/* Cột 3: Mạng xã hội */}
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-md-4 text-start"> {/* Thêm text-start để căn trái */}
               <h5 className="mb-3 fw-bold" style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', letterSpacing: '1px' }}>Mạng xã hội</h5>
-              <div className="d-flex justify-content-center gap-3">
+              <div className="d-flex gap-3"> {/* Bỏ justify-content-center */}
                 <a
                   href="https://www.facebook.com/neko.kin"
                   className="text-white"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ transition: 'transform 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  style={{ transition: 'transform 0.2s, color 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.color = '#3b5998'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.color = 'white'; }}
                 >
                   <FaFacebook size={24} />
                 </a>
@@ -242,9 +251,9 @@ const Layout = () => {
                   className="text-white"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ transition: 'transform 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  style={{ transition: 'transform 0.2s, color 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.color = '#C13584'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.color = 'white'; }}
                 >
                   <FaInstagram size={24} />
                 </a>
@@ -253,20 +262,20 @@ const Layout = () => {
                   className="text-white"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ transition: 'transform 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  style={{ transition: 'transform 0.2s, color 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.color = '#69C9D0'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.color = 'white'; }}
                 >
                   <FaTiktok size={24} />
                 </a>
                 <a
-                  href="https://www.youtube.com/@neko.kin"
+                  href="https://www.youtube.com/@NekoKin" 
                   className="text-white"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ transition: 'transform 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  style={{ transition: 'transform 0.2s, color 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.color = '#FF0000'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.color = 'white'; }}
                 >
                   <FaYoutube size={24} />
                 </a>
@@ -275,7 +284,7 @@ const Layout = () => {
           </div>
 
           {/* Dòng dưới cùng */}
-          <div className="text-center mt-4 border-top pt-3 text-white-50 small" style={{ fontSize: '13px' }}>
+          <div className="text-start mt-4 border-top pt-3 small" style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)' }}> {/* Thêm text-start và giảm độ đậm */}
             © 2025 NekoKin. All rights reserved.
           </div>
         </div>

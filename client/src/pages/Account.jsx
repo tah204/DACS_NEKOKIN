@@ -35,7 +35,7 @@ const Account = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ minHeight: '80vh' }}>
+    <div className="container mt-5" style={{ paddingTop: '30px' }}>
       <h2 className="mb-4 text-center" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold', color: '#333' }}>
         Tài khoản
       </h2>

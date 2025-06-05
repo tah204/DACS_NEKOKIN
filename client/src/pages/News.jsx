@@ -80,7 +80,7 @@ const News = () => {
                 <div className="col-md-6">
                   <Link to={`/news/${latestNews._id}`} className="text-decoration-none">
                     <img
-                      src={`/images/${latestNews.image}`}
+                      src={`http://localhost:5000/api/images/${latestNews.image}`} // Tải từ backend
                       alt={latestNews.title}
                       className="img-fluid rounded w-100 hover-zoom"
                       style={{ objectFit: 'cover', maxHeight: '300px', transition: 'transform 0.3s ease' }}
@@ -88,7 +88,6 @@ const News = () => {
                       onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                       onError={(e) => (e.target.src = '/images/default_news.jpg')}
                     />
-
                   </Link>
                 </div>
                 <div className="col-md-6">
@@ -136,7 +135,7 @@ const News = () => {
                     >
                       <Link to={`/news/${item._id}`} className="text-decoration-none ">
                         <img
-                          src={`/images/${item.image}`}
+                          src={`http://localhost:5000/api/images/${item.image}`} // Tải từ backend
                           alt={item.title}
                           className="img-fluid rounded mb-3 hover-zoom"
                           onError={(e) => (e.target.src = '/images/default_news.jpg')}
@@ -150,7 +149,7 @@ const News = () => {
                       </h5>
                       <p className="text-muted">{item.content}</p>
                       <Link
-                        to={`/news/${latestNews._id}`}
+                        to={`/news/${item._id}`} // Sửa link để trỏ đúng đến bài viết
                         className="text-decoration-none"
                         style={{ color: '#8B0000', fontWeight: 'bold' }}
                         onMouseEnter={(e) => {
@@ -188,7 +187,6 @@ const News = () => {
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </div>

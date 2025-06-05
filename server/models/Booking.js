@@ -69,6 +69,16 @@ bookingSchema.pre('validate', async function(next) {
     return next(new Error('Lỗi kiểm tra mối quan hệ khách hàng và thú cưng: ' + error.message));
   }
 
+  // Kiểm tra trạng thái trước khi cập nhật
+  if (this.isModified('status')) {
+    const previous = await mongoose.model('Booking').findOne({ _id: this._id });
+    if (previous) {
+      if (this.status === 'completed' && previous.status !== 'active') {
+        return next(new Error('Đơn phải được xác nhận (active) trước khi hoàn thành (completed).'));
+      }
+    }
+  }
+
   next();
 });
 
@@ -77,6 +87,6 @@ bookingSchema.index({ serviceId: 1 });
 bookingSchema.index({ petId: 1 });
 bookingSchema.index({ serviceId: 1, checkIn: 1, checkOut: 1 });
 bookingSchema.index({ status: 1 });
-bookingSchema.index({ serviceId: 1, bookingDate: 1 }); // Thêm index tối ưu cho truy vấn getAvailableTimes
+bookingSchema.index({ serviceId: 1, bookingDate: 1 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

@@ -11,7 +11,7 @@ exports.getAllServices = async (req, res) => {
 
 exports.getServiceById = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id); // Xóa .populate('category') vì category là số
+    const service = await Service.findById(req.params.id);
     if (!service) {
       return res.status(404).json({ message: 'Dịch vụ không tồn tại' });
     }
@@ -38,30 +38,24 @@ exports.getServicesByCategory = async (req, res) => {
 };
 
 exports.createService = async (req, res) => {
-  const { name, description, image, category, price, totalRooms } = req.body;
-
-  if (!name || !description || !image || !category || !price) {
-    return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin: name, description, image, category, price.' });
-  }
-
-  if (category === 3 && (totalRooms === undefined || totalRooms < 0)) {
-    return res.status(400).json({ message: 'Vui lòng cung cấp số lượng phòng hợp lệ cho dịch vụ khách sạn.' });
-  }
-
   try {
+    const { name, description, image, category, price, totalRooms } = req.body;
+    if (!name || !description || !image || !category || !price) {
+      return res.status(400).json({ message: 'Thiếu các trường bắt buộc' });
+    }
     const service = new Service({
       name,
       description,
       image,
       price,
       category,
-      totalRooms: category === 3 ? totalRooms : undefined,
+      totalRooms: category === 3 ? (totalRooms || 0) : undefined,
     });
-
     const newService = await service.save();
     res.status(201).json(newService);
   } catch (error) {
-    res.status(400).json({ message: 'Lỗi khi tạo dịch vụ: ' + error.message });
+    console.error('Error creating service:', error);
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -72,13 +66,11 @@ exports.updateService = async (req, res) => {
     if (!service) {
       return res.status(404).json({ message: 'Dịch vụ không tồn tại' });
     }
-
     service.name = name || service.name;
     service.description = description || service.description;
     service.image = image || service.image;
     service.category = category || service.category;
     service.price = price || service.price;
-
     if (category !== undefined) {
       if (category === 3) {
         if (totalRooms === undefined || totalRooms < 0) {
@@ -88,31 +80,29 @@ exports.updateService = async (req, res) => {
       } else {
         service.totalRooms = undefined;
       }
-    } else if (totalRooms !== undefined) {
-      if (service.category === 3) {
-        if (totalRooms < 0) {
-          return res.status(400).json({ message: 'Số lượng phòng không hợp lệ.' });
-        }
-        service.totalRooms = totalRooms;
+    } else if (totalRooms !== undefined && service.category === 3) {
+      if (totalRooms < 0) {
+        return res.status(400).json({ message: 'Số lượng phòng không hợp lệ.' });
       }
+      service.totalRooms = totalRooms;
     }
-
     const updatedService = await service.save();
     res.json(updatedService);
   } catch (error) {
-    res.status(400).json({ message: 'Lỗi khi cập nhật dịch vụ: ' + error.message });
+    console.error('Error updating service:', error);
+    res.status(400).json({ message: error.message });
   }
 };
 
 exports.deleteService = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id);
+    const service = await Service.findByIdAndDelete(req.params.id);
     if (!service) {
       return res.status(404).json({ message: 'Dịch vụ không tồn tại' });
     }
-    await service.deleteOne();
     res.json({ message: 'Dịch vụ đã được xóa' });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi xóa dịch vụ: ' + error.message });
+    console.error('Error deleting service:', error);
+    res.status(500).json({ message: error.message });
   }
 };

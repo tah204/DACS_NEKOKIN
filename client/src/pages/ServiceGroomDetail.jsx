@@ -89,7 +89,7 @@ const ServiceGroomDetail = () => {
                     <div className="container position-relative my-5">
                         <div className="grooming-content position-relative text-center">
                             <img
-                                src="https://www.theanimaldoctors.org/wp-content/uploads/2023/04/grooming.png"
+                                src="/images/groomingdog1.png"
                                 alt="Dog"
                                 className="grooming-img img-fluid"
                                 style={{ maxWidth: '90%', height: 'auto' }}

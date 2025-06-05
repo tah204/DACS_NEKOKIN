@@ -55,17 +55,17 @@ const Home = () => {
       <HeroIntro />
 
       {/* Giới thiệu */}
-      <section className="py-5" id="gioi-thieu">
+      <section className="py-5" id="gioi-thieu" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="container">
           <div className="row align-items-center g-4">
             <div className="col-12 col-lg-6">
               <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
                 <h2 className="mb-4 intro-title">Giới thiệu</h2>
                 <p className="text-muted mb-3 intro-text">
-                  NekoKin ra đời từ niềm đam mê và tình yêu dành cho thú cưng...
+                  Thú cưng là một phần quan trọng như một thành viên gia đình...
                 </p>
                 <p className="text-muted mb-3 intro-text">
-                  Chúng tôi cung cấp các sản phẩm chất lượng cao, dịch vụ tư vấn chuyên nghiệp...
+                  Chúng tôi thành lập NekoKin để đáp ứng nhu cầu...
                 </p>
                 <Link to="/about" className="btn btn-red" onClick={handleLinkClick}>Chi tiết</Link>
               </motion.div>
@@ -85,35 +85,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Tư vấn nhanh */}
-      <section className="py-5" style={{ backgroundColor: '#FAF7F1' }}>
-        <div className="container">
-          <div className="row align-items-center g-4">
-            <div className="col-12 col-lg-6 order-lg-2">
-              <div className="consultation-box">
-                <h2 className="h3 mb-3 intro-title">Tư vấn nhanh</h2>
-                <p className="mb-4 text-muted">Vui lòng nhập thông tin để được hỗ trợ tốt nhất!</p>
-                <form onSubmit={handleConsultationSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="petName" className="form-label fw-semibold">Tên khách hàng</label>
-                    <input type="text" className="form-control" id="petName" name="petName" value={consultation.petName} onChange={handleInputChange} placeholder="Nhập tên của bạn" />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="phone" className="form-label fw-semibold">Số điện thoại</label>
-                    <input type="tel" className="form-control" id="phone" name="phone" value={consultation.phone} onChange={handleInputChange} placeholder="Nhập số điện thoại" />
-                  </div>
-                  <button type="submit" className="btn w-100 py-2 btn-red">Gửi yêu cầu tư vấn</button>
-                </form>
-                <p className="mt-3 text-center text-muted">Hoặc gọi ngay <strong>036 321 3230</strong></p>
-              </div>
-            </div>
-            <div className="col-12 col-lg-6 text-center order-lg-1">
-              <img src="/images/tuvan1.jpg" alt="Thú cưng tư vấn" className="img-fluid rounded-circle shadow consultation-image" />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Danh mục dịch vụ */}
       <motion.section className="py-5" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
         <div className="container">
@@ -123,12 +94,17 @@ const Home = () => {
               categories.map((category) => (
                 <div key={category._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
                   <Link
-                    to={`/services/category/${category._id}`}
+                    to={`/categoryservices/${category._id}`} // Sửa link để khớp với route trong App.jsx
                     className="text-decoration-none text-dark"
                     onClick={handleLinkClick}
                   >
                     <motion.div whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }} className="card h-100 shadow-sm border-0">
-                      <img src={`/images/${category.image}`} className="card-img-top img-fluid card-img-custom" alt={category.name} onError={(e) => (e.target.src = '/images/default_category.jpg')} />
+                      <img
+                        src={`http://localhost:5000/api/images/${category.image}`}
+                        className="card-img-top img-fluid card-img-custom"
+                        alt={category.name}
+                        onError={(e) => (e.target.src = '/images/default_category.jpg')}
+                      />
                       <div className="card-body">
                         <h3 className="card-title card-title-center">{category.name}</h3>
                       </div>
@@ -144,36 +120,6 @@ const Home = () => {
           </div>
           <div className="text-center mt-4">
             <Link to="/services" onClick={handleLinkClick} className="btn btn-red px-4 py-2">Tìm hiểu thêm</Link>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Sản phẩm */}
-      <motion.section className="py-5" style={{ backgroundColor: '#FAF7F1' }} initial={{ opacity: 0, y: 70 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1.5 }}>
-        <div className="container">
-          <h2 className="text-center mb-5 intro-title">Sản phẩm nổi bật</h2>
-          <div className="row g-4">
-            {featuredProducts.length > 0 ? (
-              featuredProducts.map((product) => (
-                <div key={product._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <Link to={`/products/${product._id}`} className="text-decoration-none text-dark" onClick={handleLinkClick}>
-                    <motion.div whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }} className="card h-100 shadow-sm">
-                      <img src={`/images/${product.image}`} className="card-img-top img-fluid card-img-custom" alt={product.name} onError={(e) => (e.target.src = '/images/default_product.jpg')} />
-                      <div className="card-body">
-                        <h3 className="card-title text-center">{product.name}</h3>
-                      </div>
-                    </motion.div>
-                  </Link>
-                </div>
-              ))
-            ) : (
-              <div className="col-12 text-center">
-                <p className="text-muted">Không có sản phẩm nổi bật.</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mt-4">
-            <Link to="/products" className="btn btn-red" onClick={handleLinkClick}>Xem thêm</Link>
           </div>
         </div>
       </motion.section>

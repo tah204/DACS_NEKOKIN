@@ -52,7 +52,7 @@ const About = () => {
                   Thú cưng là một phần quan trọng như một thành viên gia đình của chúng ta. Vì vậy, khi thú cưng của chúng ta bị nhiễm bệnh, hiển nhiên chúng ta cũng muốn chúng được các chuyên gia tận tuỵ chăm sóc.
                 </p>
                 <p className="text-muted about-description">
-                  Chúng tôi thành lập NekoKin để đáp ứng nhu cầu cung cấp các dịch vụ chăm sóc sức khỏe và thú y đẳng cấp thế giới ở Đông Nam Á.
+                  Chúng tôi thành lập NekoKin để đáp ứng nhu cầu cung cấp các dịch vụ chăm sóc sức khỏe và thú y đẳng cấp ở Việt Nam.
                 </p>
               </motion.div>
             </div>
@@ -63,7 +63,7 @@ const About = () => {
                 transition={{ duration: 0.8 }}
               >
                 <p className="text-muted about-description">
-                  Khi nói đến sức khỏe của thú cưng, chúng tôi áp dụng các tiêu chuẩn cao nhất mà bạn có thể tìm thấy ở các bệnh viện thú y tốt nhất ở Bắc Mỹ, Châu Âu và Úc.
+                  Khi nói đến sức khỏe của thú cưng, chúng tôi áp dụng các tiêu chuẩn cao nhất mà bạn có thể tìm thấy ở các bệnh viện thú y tốt nhất ở Việt Nam.
                 </p>
                 <p className="text-muted about-description">
                   Chúng tôi luôn coi trọng việc xây dựng mối quan hệ tin cậy và lâu dài với khách hàng. NekoKin tin rằng khách hàng sẽ hoàn toàn yên tâm khi giao thú cưng của mình cho chúng tôi.

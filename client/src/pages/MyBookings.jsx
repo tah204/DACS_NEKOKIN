@@ -42,7 +42,10 @@ const MyBookings = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 console.log('Bookings data:', bookingResponse.data);
-                setBookings(bookingResponse.data);
+                const activeBookings = bookingResponse.data.filter((booking) =>
+                    booking.status === 'pending' || booking.status === 'active'
+                );
+                setBookings(activeBookings);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching bookings:', error.response?.data || error.message);
@@ -85,21 +88,20 @@ const MyBookings = () => {
         }
     };
 
-    // Hàm tính số ngày giữa checkIn và checkOut
     const calculateDays = (checkIn, checkOut) => {
         if (!checkIn || !checkOut) return 0;
         const start = moment(checkIn);
         const end = moment(checkOut);
-        return Math.ceil(end.diff(start, 'days')); // Làm tròn lên để tính cả ngày cuối
+        return Math.ceil(end.diff(start, 'days'));
     };
 
     if (loading) return <div className="text-center py-5">Đang tải...</div>;
     if (error) return <div className="text-center py-5 text-danger">{error}</div>;
 
     return (
-        <section className="booking-history-section py-5 bg-light">
+        <section className="booking-history-section py-5 bg-light" style={{ marginTop: '40px' }}>
             <div className="container">
-                <h2 className="text-center mb-5 fw-bold text-primary">Lịch Sử Đặt Dịch Vụ</h2>
+                <h2 className="text-center mb-5 fw-bold" style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 'bold' }}>Đơn Đặt Dịch Vụ</h2>
                 {bookings.length === 0 ? (
                     <div className="text-center p-5 border rounded bg-white shadow-sm">
                         <p className="mb-4">Bạn chưa có đặt dịch vụ nào.</p>
@@ -110,21 +112,17 @@ const MyBookings = () => {
                 ) : (
                     <div className="row g-4">
                         {bookings.map((booking) => {
-                            // Lấy tên dịch vụ chính hoặc tên dịch vụ con đầu tiên
                             const serviceName = booking.serviceId?.subServices
                                 ? booking.serviceId.subServices[0]?.name
                                 : booking.serviceId?.name || 'Dịch vụ không xác định';
 
-                            // Kiểm tra xem đây có phải là dịch vụ khách sạn hay không (category 3)
                             const isHotelService = booking.serviceId?.category === 3;
 
-                            // Tính giá tổng cho dịch vụ khách sạn
                             const days = isHotelService ? calculateDays(booking.checkIn, booking.checkOut) : 1;
                             const totalPrice = booking.serviceId?.price 
                                 ? booking.serviceId.price * days 
                                 : null;
 
-                            // Xác định màu sắc và văn bản cho trạng thái
                             let statusBadgeClass = '';
                             let statusText = '';
                             switch (booking.status) {
@@ -134,15 +132,7 @@ const MyBookings = () => {
                                     break;
                                 case 'active':
                                     statusBadgeClass = 'bg-success';
-                                    statusText = 'Đang hoạt động';
-                                    break;
-                                case 'completed':
-                                    statusBadgeClass = 'bg-primary';
-                                    statusText = 'Đã hoàn thành';
-                                    break;
-                                case 'canceled':
-                                    statusBadgeClass = 'bg-danger';
-                                    statusText = 'Đã hủy';
+                                    statusText = 'Đã xác nhận';
                                     break;
                                 default:
                                     statusBadgeClass = 'bg-secondary';
@@ -183,9 +173,9 @@ const MyBookings = () => {
                                                 <p className="card-text mb-2">
                                                     Giờ hẹn: {booking.bookingDate 
                                                         ? new Date(booking.bookingDate).toLocaleTimeString('vi-VN', { 
-                                                            hour: '2-digit', 
-                                                            minute: '2-digit' 
-                                                        }) 
+                                                              hour: '2-digit', 
+                                                              minute: '2-digit' 
+                                                          }) 
                                                         : 'Không áp dụng'}
                                                 </p>
                                             )}
@@ -220,6 +210,12 @@ const MyBookings = () => {
                         })}
                     </div>
                 )}
+                {/* Nút dẫn đến Booking History */}
+                <div className="text-center mt-5">
+                    <Link to="/bookinghistory" className="btn btn-secondary btn-lg">
+                        Xem Lịch Sử Đặt Dịch Vụ
+                    </Link>
+                </div>
             </div>
         </section>
     );

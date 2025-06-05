@@ -72,14 +72,14 @@ const Services = () => {
                   <div className="card service-card border-0 shadow-sm h-100">
                     <div className="service-img-wrapper">
                       <img
-                        src={`/images/${service.image}`}
+                        src={`http://localhost:5000/api/images/${service.image}`}
                         alt={service.name}
                         className="service-img"
                         onError={(e) => (e.target.src = '/images/default_service.jpg')}
                       />
                     </div>
                     <div className="service-card-body">
-                      <h5 className="fw-bold mb-2" style={{ fontFamily: 'Quicksand' }}>{service.name}</h5>
+                      <h5 className="fw-bold mb-2" style={{color: 'white' , fontFamily: 'Quicksand' }}>{service.name}</h5>
                       <p className="mb-3">{service.description || 'Không có mô tả'}</p>
                       <Link
                         to={`/categoryservices/${service._id}`}

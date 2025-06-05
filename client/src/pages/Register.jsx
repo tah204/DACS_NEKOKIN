@@ -14,7 +14,7 @@ const Register = () => {
   useEffect(() => {
     let timer;
     if (showMessage) {
-      timer = setTimeout(() => setShowMessage(false), 2000);
+      timer = setTimeout(() => setShowMessage(false), 1000);
     }
     return () => clearTimeout(timer);
   }, [showMessage]);
@@ -63,7 +63,6 @@ const Register = () => {
         {showMessage && (
           <div className={`alert ${message.includes('thành công') ? 'alert-success' : 'alert-danger'}`}>
             {message}
-            <button type="button" className="btn-close" onClick={() => setShowMessage(false)} />
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -104,7 +103,6 @@ const Register = () => {
               className="form-control"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Tùy chọn"
             />
           </div>
           <div className="mb-3">
@@ -114,7 +112,6 @@ const Register = () => {
               className="form-control"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Tùy chọn"
             />
           </div>
           <button type="submit" className="btn btn-primary w-100">

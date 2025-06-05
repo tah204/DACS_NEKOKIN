@@ -215,6 +215,9 @@ exports.updateBooking = async (req, res) => {
             if (!['pending', 'active', 'completed', 'canceled'].includes(status)) {
                 return res.status(400).json({ message: 'Trạng thái không hợp lệ.' });
             }
+            if (status === 'completed' && booking.status !== 'active') {
+                return res.status(400).json({ message: 'Đơn phải được xác nhận (active) trước khi hoàn thành (completed).' });
+            }
             booking.status = status;
         }
         if (notes !== undefined) {
@@ -257,11 +260,13 @@ exports.updateBooking = async (req, res) => {
             booking.checkOut = undefined;
         }
 
-        const updatedBooking = await booking.save();
-        await updatedBooking
+        await booking.save(); // Lưu thay đổi
+        // Tìm lại document và populate
+        const updatedBooking = await Booking.findById(booking._id)
             .populate('serviceId', 'name price category')
             .populate('petId', 'name type')
             .populate('customerId', 'name phone');
+
         res.status(200).json(updatedBooking);
     } catch (error) {
         console.error('Error in updateBooking:', error.message || error);
@@ -307,13 +312,11 @@ exports.getAvailableTimes = async (req, res) => {
             return res.status(400).json({ message: 'Dịch vụ không hợp lệ hoặc là dịch vụ khách sạn.' });
         }
 
-        // Danh sách khung giờ khả dụng (khớp với TimeSlotPicker: 8:00–15:00, cách 30 phút)
         const availableTimeSlots = [
             '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
             '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00'
         ];
 
-        // Lấy các booking trong ngày được chọn
         const startOfDay = new Date(selectedDate.setHours(0, 0, 0, 0));
         const endOfDay = new Date(selectedDate.setHours(23, 59, 59, 999));
 
@@ -326,26 +329,24 @@ exports.getAvailableTimes = async (req, res) => {
             }
         });
 
-        console.log('Bookings found for', selectedDate.toISOString(), ':', bookings); // Debug
+        console.log('Bookings found for', selectedDate.toISOString(), ':', bookings);
 
-        // Trích xuất các khung giờ đã được đặt
         const bookedTimes = bookings.map(booking => {
             const timeStr = new Date(booking.bookingDate).toLocaleTimeString('vi-VN', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
-            console.log('Extracted time from booking:', timeStr); // Debug
+            console.log('Extracted time from booking:', timeStr);
             return timeStr;
         });
 
-        console.log('Booked times:', bookedTimes); // Debug
+        console.log('Booked times:', bookedTimes);
 
-        // Lọc ra các khung giờ còn trống
         const availableTimes = availableTimeSlots.filter(
             time => !bookedTimes.includes(time)
         );
 
-        console.log('Available times:', availableTimes); // Debug
+        console.log('Available times:', availableTimes);
 
         res.json({ availableTimes });
     } catch (error) {
